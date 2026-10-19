@@ -24,3 +24,5 @@ composer.lock
 /toubipratdb.env
 /toubirdvdb.env
 *.env
+nrv.env
+.env
