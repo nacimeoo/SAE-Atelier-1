@@ -1,0 +1,57 @@
+networks:
+  nrv.net:
+    driver: bridge
+
+services:
+  api.nrv:
+    build:
+      context: build
+      dockerfile: 8.5-cli.Dockerfile
+    ports:
+      - '7080:80'
+    volumes:
+      - ./app:/var/php
+    working_dir: /var/php
+    env_file: ./nrv.env
+    networks:
+      - nrv.net
+    depends_on:
+      - nrv.db
+    command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
+
+  front.nrv:
+    image: 'nginx:alpine'
+    ports:
+      - '7081:80'
+    volumes:
+      - ./front/public:/usr/share/nginx/html:ro
+    networks:
+      - nrv.net
+    depends_on:
+      - api.nrv
+
+  nrv.db:
+    image: 'postgres:18.6'
+    container_name: nrv_db
+    env_file: ./nrv.env
+    networks:
+      nrv.net:
+        aliases:
+          - sql.db
+    volumes:
+      - ./app/sql:/var/sql
+      - ./app/sql:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql
+
+  adminer:
+    image: adminer:5.4.2
+    depends_on:
+      - nrv.db
+    ports:
+      - '7082:8080'
+    command: php -S 0.0.0.0:8080 -t /var/www/html
+    networks:
+      - nrv.net
+
+volumes:
+  pgdata:
