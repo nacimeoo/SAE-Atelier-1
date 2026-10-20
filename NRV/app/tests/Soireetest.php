@@ -11,7 +11,18 @@ class SoireeTest extends TestCase
     private function creerSoiree(int $capacite, int $vendues): Soiree
     {
         $lieu = new Lieu('l1', "L'Autre Canal", 'Nancy', $capacite);
-        return new Soiree('s1', 'Nuit de fer', 'Soirée métal', '2026-11-06', '19:30', 32.0, 22.0, $vendues, $lieu);
+        return new Soiree(
+            's1',
+            'Nuit de fer',
+            'Soirée métal',
+            new DateTimeImmutable('2026-11-06'),
+            new DateTimeImmutable('2026-11-06 19:30'),
+            32.0,
+            22.0,
+            $lieu,
+            [],
+            $vendues
+        );
     }
 
     public function testPlacesRestantes(): void
@@ -31,7 +42,7 @@ class SoireeTest extends TestCase
     public function testAjouterSpectacle(): void
     {
         $soiree = $this->creerSoiree(500, 0);
-        $soiree->ajouterSpectacle(new Spectacle('sp1', 'Iron Wolves', 'Iron Wolves', 'desc', 'Métal', null, '22:15'));
+        $soiree->ajouterSpectacle(new Spectacle('test', 'test', 'test', 'desc', 'test', 'test.jpg', null, new DateTimeImmutable('2026-11-06 22:15')));
         $this->assertCount(1, $soiree->getSpectacles());
     }
 }
