@@ -26,4 +26,16 @@ return [
     GetSoireeAction::class => function (ContainerInterface $c) {
         return new GetSoireeAction($c->get(ServiceSoireeInterface::class));
     },
+
+    GetSpectaclesAction::class => function (ContainerInterface $c) {
+        return new GetSpectaclesAction($c->get(ServiceSpectacleInterface::class));
+    },
+
+    ServiceSpectacleInterface::class => function (ContainerInterface $c) {
+        return new ServiceSpectacle($c->get(SpectacleRepositoryInterface::class));
+    },
+
+    SpectacleRepositoryInterface::class => function (ContainerInterface $c) {
+        return new SpectacleRepository($c->get('nrv.pdo'));
+    },
 ];

@@ -14,6 +14,9 @@ class Spectacle
         private string $image,
         private ?string $urlVideo,
         private \DateTimeImmutable $heure,
+        private string $soireeId,
+        private \DateTimeImmutable $date,
+
     ) {}
 
     public function getId(): string
@@ -54,6 +57,16 @@ class Spectacle
     public function getHeure(): \DateTimeImmutable
     {
         return $this->heure;
+    }
+
+    public function getSoireeId(): string 
+    { 
+        return $this->soireeId; 
+    }
+    
+    public function getDate(): \DateTimeImmutable 
+    { 
+        return $this->date; 
     }
 
     
