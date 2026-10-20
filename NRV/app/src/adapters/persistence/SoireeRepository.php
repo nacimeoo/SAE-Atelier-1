@@ -10,7 +10,7 @@ use nrv\domain\entities\Soiree;
 use nrv\domain\entities\Spectacle;
 use PDO;
 
-class PgSoireeRepository implements SoireeRepositoryInterface
+class SoireeRepository implements SoireeRepositoryInterface
 {
     public function __construct(private PDO $pdo) {}
 
@@ -43,19 +43,21 @@ class PgSoireeRepository implements SoireeRepositoryInterface
             $row['id'],
             $row['nom'],
             $row['thematique'],
-            $row['date'],
-            substr($row['heure_debut'], 0, 5),
+            new \DateTimeImmutable($row['date']),
+            new \DateTimeImmutable($row['date'] . ' ' . $row['heure_debut']),
             (float) $row['tarif_normal'],
             (float) $row['tarif_reduit'],
-            (int) $row['nb_places_vendues'],
-            $lieu
+            $lieu,
+            [],
+            (int) $row['nb_places_vendues']
         );
 
         $stmt = $this->pdo->prepare(
-            'SELECT id, titre, artistes, description, style, url_video, heure
-             FROM spectacle
-             WHERE soiree_id = :id
-             ORDER BY heure'
+            'SELECT sp.id, sp.titre, sp.artistes, sp.description, sp.style, sp.url_video, sp.heure,
+                    (SELECT i.url FROM image i WHERE i.spectacle_id = sp.id LIMIT 1) AS image
+             FROM spectacle sp
+             WHERE sp.soiree_id = :id
+             ORDER BY sp.heure'
         );
         $stmt->execute(['id' => $id]);
 
@@ -66,8 +68,9 @@ class PgSoireeRepository implements SoireeRepositoryInterface
                 $sp['artistes'],
                 $sp['description'],
                 $sp['style'],
+                $sp['image'] ?? '',
                 $sp['url_video'],
-                substr($sp['heure'], 0, 5)
+                new \DateTimeImmutable($row['date'] . ' ' . $sp['heure'])
             ));
         }
 

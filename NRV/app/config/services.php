@@ -1,6 +1,6 @@
 <?php
 use nrv\adapters\actions\GetSoireeAction;
-use nrv\adapters\persistence\PgSoireeRepository;
+use nrv\adapters\persistence\SoireeRepository;
 use nrv\application\ports\api\ServiceSoireeInterface;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\application\usecases\ServiceSoiree;
@@ -16,7 +16,7 @@ return [
     },
 
     SoireeRepositoryInterface::class => function (ContainerInterface $c) {
-        return new PgSoireeRepository($c->get('nrv.pdo'));
+        return new SoireeRepository($c->get('nrv.pdo'));
     },
 
     ServiceSoireeInterface::class => function (ContainerInterface $c) {
