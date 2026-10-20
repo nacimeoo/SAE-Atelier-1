@@ -15,7 +15,7 @@ DROP TYPE IF EXISTS type_tarif;
 DROP TYPE IF EXISTS statut_commande;
 
 CREATE TYPE role            AS ENUM ('CLIENT', 'GESTIONNAIRE');
-CREATE TYPE type_tarif      AS ENUM ('NORMAL', 'REDUIT');
+CREATE TYPE type_tarif      AS ENUM ('NORMAL', 'REDUIT', 'PASS');
 CREATE TYPE statut_commande AS ENUM ('EN_ATTENTE', 'PAYEE');
 
 CREATE TABLE utilisateur (
@@ -103,5 +103,6 @@ CREATE TABLE billet (
     type_tarif   type_tarif NOT NULL,
     prix         NUMERIC(8,2) NOT NULL,
     commande_id  UUID NOT NULL REFERENCES commande(id),
-    soiree_id    UUID NOT NULL REFERENCES soiree(id)
+    soiree_id    UUID REFERENCES soiree(id),
+    pass_id      UUID REFERENCES pass(id)
 );
