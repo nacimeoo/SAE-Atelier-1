@@ -46,9 +46,9 @@ class Soiree
         return $this->heureDebut;
     }
 
-    public function getTarif(): float
+    public function getTarif(TypeTarif $type = TypeTarif::NORMAL): float
     {
-        return $type === TypeTarif::REDUIT ? $this->tarifReduit : $this->tarifNormal;    
+        return $type === TypeTarif::REDUIT ? $this->tarifReduit : $this->tarifNormal;
     }
 
     public function getLieu(): Lieu
@@ -66,6 +66,21 @@ class Soiree
         return $this->nbPlacesVendues;
     }
 
+    public function ajouterSpectacle(Spectacle $spectacle): void
+    {
+        $this->spectacles[] = $spectacle;
+    }
+    
+    public function getPlacesRestantes(): int
+    {
+        return max(0, $this->lieu->getNbPlaces() - $this->nbPlacesVendues);
+    }
+
+
+        public function estComplete(): bool
+    {
+        return $this->getPlacesRestantes() === 0;
+    }
 
 }
     
