@@ -8,7 +8,8 @@ class Pass
     public function __construct(
         private string $id,
         private string $libelle,
-        private float $tarif,
+        private float $tarifNormal,
+        private float $tarifReduit,
         private array $soirees,
     ){}
 
@@ -24,7 +25,7 @@ class Pass
 
     public function getTarif(): float
     {
-        return $this->tarif;
+        return $type === TypeTarif::REDUIT ? $this->tarifReduit : $this->tarifNormal;    
     }
 
     public function getSoirees(): array
