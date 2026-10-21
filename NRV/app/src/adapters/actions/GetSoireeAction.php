@@ -56,6 +56,7 @@ class GetSoireeAction
                     'style'       => $sp->style,
                     'url_video'   => $sp->urlVideo,
                     'heure'       => $sp->heure,
+                    'image'       => $sp->image,
                 ], $soiree->spectacles),
             ],
             '_links' => [
@@ -65,6 +66,8 @@ class GetSoireeAction
         ];
 
         $rs->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        return $rs->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $rs->withHeader('Content-Type', 'application/json')
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withStatus(200);
     }
 }
