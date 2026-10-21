@@ -68,9 +68,11 @@ class SoireeRepository implements SoireeRepositoryInterface
                 $sp['artistes'],
                 $sp['description'],
                 $sp['style'],
-                $sp['image'] ?? '',
+                $sp['image'],
                 $sp['url_video'],
-                new \DateTimeImmutable($row['date'] . ' ' . $sp['heure'])
+                new \DateTimeImmutable($row['date'] . ' ' . $sp['heure']),
+                $row['id'],
+                new \DateTimeImmutable($row['date'])
             ));
         }
 

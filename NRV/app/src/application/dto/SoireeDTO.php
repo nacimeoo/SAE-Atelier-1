@@ -35,7 +35,18 @@ class SoireeDTO
             $s->getLieu()->getAdresse(),
             $s->getTarif(),
             $s->getPlacesRestantes(),
-            array_map(fn($sp) => SpectacleDTO::fromEntity($sp), $s->getSpectacles())
+            array_map(fn($sp) => new SpectacleDTO(
+                $sp->getId(),
+                $sp->getTitre(),
+                $sp->getArtistes(),
+                $sp->getDescription(),
+                $sp->getStyle(),
+                $sp->getImage(),
+                $sp->getUrlVideo(),
+                $sp->getHeure()->format('H:i'),
+                $sp->getSoireeId(),
+                $sp->getDate()->format('Y-m-d')
+            ), $s->getSpectacles())
         );
     }
 }
