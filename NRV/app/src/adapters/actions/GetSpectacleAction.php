@@ -30,7 +30,9 @@ class GetSpectacleAction
 
         $response->getBody()->write(json_encode(['spectacles' => $data], JSON_UNESCAPED_UNICODE));
         
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return $response->withHeader('Content-Type', 'application/json')
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withStatus(200);
     }
         
 

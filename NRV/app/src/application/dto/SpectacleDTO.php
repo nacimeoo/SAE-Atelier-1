@@ -33,7 +33,12 @@ class SpectacleDTO
             'urlVideo' => $this->urlVideo,
             'heure' => $this->heure,
             'soireeId' => $this->soireeId,
-            'date' => $this->date
+            'date' => $this->date,
+            '_links' => [
+                'soiree' => [
+                    'href' => '/soirees/' . $this->soireeId
+                ]
+            ]
         ];
     }
 
