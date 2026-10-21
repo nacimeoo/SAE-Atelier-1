@@ -4,13 +4,18 @@ use nrv\adapters\persistence\SoireeRepository;
 use nrv\application\ports\api\ServiceSoireeInterface;
 use nrv\application\ports\spi\SoireeRepositoryInterface;
 use nrv\application\usecases\ServiceSoiree;
+use nrv\adapters\actions\GetSpectacleAction;
+use nrv\adapters\persistence\SpectacleRepository;
+use nrv\application\ports\api\ServiceSpectacleInterface;
+use nrv\application\ports\spi\SpectacleRepositoryInterface;
+use nrv\application\usecases\ServiceSpectacle;
 use Psr\Container\ContainerInterface;
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
         $config = parse_ini_file(__DIR__ . '/.env');
-        $dsn = "pgsql:host={$config['DB_HOST']};dbname={$config['DB_NAME']}";
-        $pdo = new PDO($dsn, $config['DB_USER'], $config['DB_PASSWORD']);
+        $dsn = "{$config['lib.driver']}:host={$config['lib.host']};dbname={$config['lib.database']}";
+        $pdo = new PDO($dsn, $config['lib.username'], $config['lib.password']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo;
     },
@@ -25,10 +30,6 @@ return [
 
     GetSoireeAction::class => function (ContainerInterface $c) {
         return new GetSoireeAction($c->get(ServiceSoireeInterface::class));
-    },
-
-    GetSpectaclesAction::class => function (ContainerInterface $c) {
-        return new GetSpectaclesAction($c->get(ServiceSpectacleInterface::class));
     },
 
     ServiceSpectacleInterface::class => function (ContainerInterface $c) {

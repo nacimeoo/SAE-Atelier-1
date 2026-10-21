@@ -10,22 +10,32 @@ class SpectacleDTO
     public function __construct(
         public string $id,
         public string $titre,
-        public string $date,
+        public string $artistes,
+        public string $description,
+        public string $style,
+        public ?string $image,
+        public ?string $urlVideo,
         public string $heure,
-        public string $image,
         public string $soireeId,
+        public string $date,
     ) {
     }
 
-    public static function fromEntity(Spectacle $s): self
+    public function toArray(): array
     {
-        return new self(
-            $s->getId(),
-            $s->getTitre(),
-            $s->getDate()->format('Y-m-d'),
-            $s->getHeure()->format('H:i'),
-            $s->getImage(),
-            $s->getSoireeId(),
-        );
+        return [
+            'id' => $this->id,
+            'titre' => $this->titre,
+            'artistes' => $this->artistes,
+            'description' => $this->description,
+            'style' => $this->style,
+            'image' => $this->image,
+            'urlVideo' => $this->urlVideo,
+            'heure' => $this->heure,
+            'soireeId' => $this->soireeId,
+            'date' => $this->date
+        ];
     }
+
+    
 }

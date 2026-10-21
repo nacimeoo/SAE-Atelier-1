@@ -20,8 +20,10 @@ class SpectacleRepository implements SpectacleRepositoryInterface
 
     public function findAll(?string $date = null, ?string $style = null): array
     {
-        $sql = 'SELECT *, soiree.date AS date_soiree FROM spectacle 
-                JOIN soiree ON soiree.id = spectacle.soiree_id';
+        $sql = 'SELECT spectacle.*, soiree.date AS date_soiree, image.url AS image FROM spectacle
+                JOIN image ON image.spectacle_id = spectacle.id
+                JOIN soiree ON soiree.id = spectacle.soiree_id
+                WHERE 1 = 1';
         
         $params = [];
 

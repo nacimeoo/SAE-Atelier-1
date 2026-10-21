@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Respect\Validation\Validator as v;
 use Slim\Exception\HttpBadRequestException;
 
-class GetSpectaclesAction
+class GetSpectacleAction
 {
     private ServiceSpectacleInterface $service;
 

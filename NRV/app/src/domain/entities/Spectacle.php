@@ -11,7 +11,7 @@ class Spectacle
         private string $artistes,
         private string $description,
         private string $style,
-        private string $image,
+        private ?string $image,
         private ?string $urlVideo,
         private \DateTimeImmutable $heure,
         private string $soireeId,
@@ -44,7 +44,7 @@ class Spectacle
         return $this->style;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }

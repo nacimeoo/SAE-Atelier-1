@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace nrv\application\services;
+namespace nrv\application\usecases;
 
 use nrv\application\dto\SpectacleDTO;
 use nrv\application\ports\api\ServiceSpectacleInterface;
@@ -27,9 +27,9 @@ class ServiceSpectacle implements ServiceSpectacleInterface
                 $spectacle->getStyle(),
                 $spectacle->getImage(),
                 $spectacle->getUrlVideo(),
-                $spectacle->getHeure(),
+                $spectacle->getHeure()->format('H:i'),
                 $spectacle->getSoireeId(),
-                $spectacle->getDate()
+                $spectacle->getDate()->format('Y-m-d')
             );
         }
         return $dto;
