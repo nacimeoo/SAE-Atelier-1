@@ -1,0 +1,315 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #111111;
+  background-color: #ffffff;
+  line-height: 1.5;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.main-header .header-left, .main-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.main-header .nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+.main-header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e64a19;
+}
+.main-header a {
+  text-decoration: none;
+  color: #666666;
+  font-weight: 500;
+}
+.main-header a:hover, .main-header a.active {
+  color: #111111;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+.page-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.page-header .subtitle {
+  color: #666666;
+  font-size: 1.1rem;
+}
+.page-header .filters-section {
+  display: flex;
+  gap: 1rem;
+}
+.page-header .filters-section .filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.page-header .filters-section .filter-group label {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.page-header .filters-section .filter-group select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 1rem;
+  min-width: 150px;
+  background-color: #ffffff;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.grid-container .card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out;
+}
+.grid-container .card:hover {
+  transform: scale(1.03);
+}
+.grid-container .card .img-container {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background-color: #d9d9d9;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.grid-container .card .img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.grid-container .card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.grid-container .card .date-heure {
+  color: #666666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.grid-container .card .badge {
+  display: inline-block;
+  background-color: #f4f4f4;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+#btn-retour {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+#btn-retour:hover {
+  color: #111111;
+}
+
+.soiree-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.soiree-main .main-image-container {
+  width: 100%;
+  aspect-ratio: 21/9;
+  background-color: #d9d9d9;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+.soiree-main .badge-theme {
+  background-color: #f4f4f4;
+  margin-bottom: 1rem;
+}
+.soiree-main .soiree-title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+.soiree-main .info-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.soiree-main .info-cards .info-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.soiree-main .info-cards .info-card .info-label {
+  color: #666666;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+.soiree-main .info-cards .info-card .info-value {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.soiree-main .section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.soiree-main .spectacles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.soiree-main .spectacles-list .spectacle-item {
+  display: flex;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #f4f4f4;
+}
+.soiree-main .spectacles-list .spectacle-item:last-child {
+  border-bottom: none;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-img-container {
+  width: 200px;
+  aspect-ratio: 4/3;
+  background-color: #d9d9d9;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-info .spectacle-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-info .spectacle-meta .heure-orange {
+  color: #e64a19;
+  font-weight: bold;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-info h4 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-info .artistes {
+  color: #666666;
+  margin-bottom: 0.5rem;
+}
+.soiree-main .spectacles-list .spectacle-item .spectacle-info .description {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #111111;
+}
+
+.soiree-sidebar .billetterie-card {
+  background-color: #f4f4f4;
+  padding: 2rem;
+  border-radius: 8px;
+}
+.soiree-sidebar .billetterie-card h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+.soiree-sidebar .billetterie-card .ticket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-details {
+  display: flex;
+  flex-direction: column;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-details .ticket-name {
+  font-weight: bold;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-details .ticket-price {
+  color: #666666;
+  font-size: 0.9rem;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-controls .btn-qty {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.soiree-sidebar .billetterie-card .ticket-row .ticket-controls .qty {
+  width: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.soiree-sidebar .billetterie-card .total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+.soiree-sidebar .billetterie-card .btn-primary {
+  width: 100%;
+  background-color: #e64a19;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.soiree-sidebar .billetterie-card .btn-primary:hover {
+  filter: brightness(90%);
+}
+
+/*# sourceMappingURL=style.css.map */
