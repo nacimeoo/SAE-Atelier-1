@@ -56,4 +56,15 @@ class ServicePanier implements ServicePanierInterface
 
         return PanierDTO::fromEntity($panier);
     }
+
+    public function consulterPanier(string $utilisateurId): PanierDTO
+    {
+        $panier = $this->panierRepository->findByUtilisateurId($utilisateurId);
+
+        if ($panier === null) {
+            return PanierDTO::vide();
+        }
+
+        return PanierDTO::fromEntity($panier);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 use nrv\adapters\actions\GetSoireeAction;
 use nrv\adapters\persistence\SoireeRepository;
 use nrv\application\ports\api\ServiceSoireeInterface;
@@ -24,6 +25,7 @@ use nrv\application\usecases\ServiceUtilisateur;
 use nrv\adapters\actions\LoginAction;
 use nrv\adapters\actions\RegisterAction;
 use nrv\adapters\middlewares\UtilisateurMiddleware;
+use nrv\adapters\actions\GetPanierAction;
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -66,9 +68,6 @@ return [
         return new PanierRepository($c->get('nrv.pdo'), $c->get(SoireeRepositoryInterface::class));
     },
 
-    AjouterAuPanierAction::class => function (ContainerInterface $c) {
-        return new AjouterAuPanierAction($c->get(ServicePanierInterface::class));
-    },
 
     UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {
         return new UtilisateurRepository($c->get('nrv.pdo'));
@@ -92,5 +91,12 @@ return [
         return new UtilisateurMiddleware($config['jwt.secret']);
     },
 
-    
+    AjouterAuPanierAction::class => function (ContainerInterface $c) {
+        return new AjouterAuPanierAction($c->get(ServicePanierInterface::class));
+    },
+
+    GetPanierAction::class => function (ContainerInterface $c) {
+        return new GetPanierAction($c->get(ServicePanierInterface::class));
+    },
+
 ];
