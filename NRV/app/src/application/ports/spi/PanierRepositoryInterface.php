@@ -10,6 +10,7 @@ interface PanierRepositoryInterface
     public function findById(string $id): Panier;
     public function create(Panier $panier): void;
     public function ajouterLignePanier(Panier $panier): void;
+    public function findByUtilisateurId(string $utilisateurId): ?Panier;
 
 
 }

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chargerSpectacles();
     chargerStyles();
     afficherCompteur();
+    initAuth();
 
     const dateFilter = document.getElementById('date-filter');
     const styleFilter = document.getElementById('style-filter');
@@ -180,15 +181,6 @@ async function chargerSoiree(urlApi) {
     }
 }
 
-function getPanierId() {
-    let panierId = localStorage.getItem('panierId');
-    if (!panierId) {
-        panierId = crypto.randomUUID();
-        localStorage.setItem('panierId', panierId);
-    }
-    return panierId;
-}
-
 function updateCompteur(lignes) {
     const total = lignes.reduce((sum, ligne) => sum + ligne.quantite, 0);
     localStorage.setItem('panierTotal', total);
@@ -202,30 +194,49 @@ function afficherCompteur() {
 }
 
 async function ajouterAuPanier(soireeId, quantite) {
-    const response = await fetch(`${API_BASE_URL}/panier/${getPanierId()}/lignes`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            soiree_id: soireeId,
-            type_tarif: 'NORMAL',
-            quantite: quantite
-        })
-    });
-
-    if (response.status === 201) {
-        const data = await response.json();
-        updateCompteur(data.panier.lignes);
-        return { success: true, message: "Billets ajoutés au panier" };
-    }
-
-    if (response.status === 422) {
-        const data = await response.json();
-        return { success: false, message: data.message };
+    const token = getToken();
+    if (!token) {
+        afficherSection('auth');
+        return { success: false, message: "Vous devez être connecté pour ajouter au panier." };
     }
     
-    return { success: false, message: "Erreur lors de l'ajout au panier" };
+    try {
+        const response = await fetch(`${API_BASE_URL}/panier/lignes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ${token}'
+            },
+            body: JSON.stringify({
+                soiree_id: soireeId,
+                type_tarif: 'NORMAL',
+                quantite: quantite
+            })
+        });
+
+        if (response.status === 201) {
+            const data = await response.json();
+            updateCompteur(data.panier.lignes);
+            return { success: true, message: "Billets ajoutés au panier" };
+        }
+
+        if (response.status === 401) {
+            const data = await response.json();
+            deconnecter();
+            afficherSection('auth');
+            return { success: false, message: "Session expiré reconnectez vous" };
+        }
+
+        if (response.status === 422) {
+            const data = await response.json();
+            return { success: false, message: data.message };
+        }
+    
+        return { success: false, message: "Erreur lors de l'ajout au panier" };
+    } catch (error){
+        console.error("Erreur ajout panier :", error);
+        return { success: false, message: "Impossible de joindre le serveur." };
+    }
 }
 
 function initBilleterie(soiree) {
@@ -265,6 +276,163 @@ function initBilleterie(soiree) {
         if (result.success) {
             quantite = 0;
             updateTotal();
+        }
+    });
+}
+
+function getToken(){
+    return localStorage.getItem('nrv_token');
+}
+
+function getUser(){
+    try {
+        return JSON.parse(localStorage.getItem('nrv_user'));
+    }catch(e){
+        return null;
+    }
+}
+
+function enregistrerSession(token, user) {
+    localStorage.setItem('nrv_token', token);
+    localStorage.setItem('nrv_prenom', user.prenom);
+    afficherUtilisateur();
+}
+
+function afficherUtilisateur() {
+    const prenom = localStorage.getItem('nrv_prenom');
+    document.getElementById('lien-connexion').style.display = prenom ? 'none' : 'inline';
+    document.getElementById('zone-user').style.display = prenom ? 'inline' : 'none';
+    document.getElementById('nom-utilisateur').textContent = prenom || '';
+}
+
+function afficherSection(nom) {
+    document.getElementById('spectacles-section').style.display = nom === 'programme' ? 'block' : 'none';
+    document.getElementById('page-header-title').style.display = nom === 'programme' ? 'block' : 'none';
+    document.getElementById('soiree-section').style.display = nom === 'soiree' ? 'block' : 'none';
+    document.getElementById('auth-section').style.display = nom === 'auth' ? 'block' : 'none';
+}
+
+function deconnecter() {
+    ['nrv_token', 'nrv_prenom', 'panierTotal'].forEach(cle => localStorage.removeItem(cle));
+    afficherUtilisateur();
+    afficherCompteur();
+}
+
+async function connecter(email, password) {
+    const response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        enregistrerSession(data.token, data.user);
+        return { success: true };
+    }
+    if (response.status === 401) {
+        return { success: false, message: "Email ou mot de passe incorrect." };
+    }
+    return { success: false, message: "Erreur lors de la connexion." };
+}
+
+async function inscrire(nom, prenom, email, password) {
+    const response = await fetch(`${API_BASE_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom, prenom, email, password })
+    });
+
+    if (response.status === 201) {
+        return { success: true };
+    }
+    if (response.status === 409) {
+        return { success: false, message: "Cet email est déjà utilisé." };
+    }
+    if (response.status === 400) {
+        return { success: false, message: "Données invalides (mot de passe de 8 caractères minimum)." };
+    }
+    return { success: false, message: "Erreur lors de l'inscription." };
+}
+
+
+function initAuth() {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const loginError = document.getElementById('login-error');
+    const registerError = document.getElementById('register-error');
+
+    document.getElementById('lien-connexion').addEventListener('click', (e) => {
+        e.preventDefault();
+        afficherSection('auth');
+    });
+
+    document.getElementById('lien-deconnexion').addEventListener('click', (e) => {
+        e.preventDefault();
+        deconnecter();
+        afficherSection('programme');
+    });
+
+    document.getElementById('btn-retour').addEventListener('click', () => {
+        afficherSection('programme');
+    });
+
+    document.getElementById('vers-inscription').addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+    });
+
+    document.getElementById('vers-connexion').addEventListener('click', (e) => {
+        e.preventDefault();
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.textContent = '';
+        try {
+            const result = await connecter(
+                document.getElementById('login-email').value,
+                document.getElementById('login-password').value
+            );
+            if (result.success) {
+                loginForm.reset();
+                afficherSection('programme');
+            } else {
+                loginError.textContent = result.message;
+            }
+        } catch (error) {
+            loginError.textContent = "Impossible de joindre le serveur.";
+        }
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        registerError.textContent = '';
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        try {
+            const result = await inscrire(
+                document.getElementById('register-nom').value,
+                document.getElementById('register-prenom').value,
+                email,
+                password
+            );
+            if (!result.success) {
+                registerError.textContent = result.message;
+                return;
+            }
+            const login = await connecter(email, password);
+            if (login.success) {
+                registerForm.reset();
+                afficherSection('programme');
+            } else {
+                registerError.textContent = login.message;
+            }
+        } catch (error) {
+            registerError.textContent = "Impossible de joindre le serveur.";
         }
     });
 }

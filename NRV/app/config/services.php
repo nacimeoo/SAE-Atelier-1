@@ -17,6 +17,14 @@ use nrv\adapters\actions\AjouterAuPanierAction;
 use nrv\adapters\persistence\PanierRepository;
 use nrv\application\usecases\ServicePanier;
 
+use nrv\application\ports\api\ServiceUtilisateurInterface;
+use nrv\application\ports\spi\UtilisateurRepositoryInterface;
+use nrv\adapters\persistence\UtilisateurRepository;
+use nrv\application\usecases\ServiceUtilisateur;
+use nrv\adapters\actions\LoginAction;
+use nrv\adapters\actions\RegisterAction;
+use nrv\adapters\middlewares\UtilisateurMiddleware;
+
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
         $config = parse_ini_file(__DIR__ . '/.env');
@@ -61,4 +69,28 @@ return [
     AjouterAuPanierAction::class => function (ContainerInterface $c) {
         return new AjouterAuPanierAction($c->get(ServicePanierInterface::class));
     },
+
+    UtilisateurRepositoryInterface::class => function (ContainerInterface $c) {
+        return new UtilisateurRepository($c->get('nrv.pdo'));
+    },
+
+    ServiceUtilisateurInterface::class => function (ContainerInterface $c) {
+        $config = parse_ini_file(__DIR__ . '/.env');
+        return new ServiceUtilisateur($c->get(UtilisateurRepositoryInterface::class), $config['jwt.secret']);
+    },
+
+    LoginAction::class => function (ContainerInterface $c) {
+        return new LoginAction($c->get(ServiceUtilisateurInterface::class));
+    },
+
+    RegisterAction::class => function (ContainerInterface $c) {
+        return new RegisterAction($c->get(ServiceUtilisateurInterface::class));
+    },
+
+    UtilisateurMiddleware::class => function (ContainerInterface $c) {
+        $config = parse_ini_file(__DIR__ . '/.env');
+        return new UtilisateurMiddleware($config['jwt.secret']);
+    },
+
+    
 ];

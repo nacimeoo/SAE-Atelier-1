@@ -23,20 +23,16 @@ class AjouterAuPanierAction
     public function __invoke(Request $rq, Response $rs, array $args): Response
     {
         $body = $rq->getParsedBody();
-        $panierId = $args['id'] ?? null;
+        $UtilisateurId = $rq->getAttribute('utilisateurId');
         $soireeId = $body['soiree_id'] ?? null;
         $typeTarif = $body['type_tarif'] ?? null;
         $quantite = isset($body['quantite']) ? (int)$body['quantite'] : null;
-
-        if (!v::uuid()->isValid($panierId)) {
-            throw new HttpBadRequestException($rq, "id de panier invalide : $panierId");
-        }
 
         if (!v::uuid()->isValid($soireeId)) {
             throw new HttpBadRequestException($rq, "id de soirée invalide : $soireeId");
         }
 
-        if (!v::in(['NORMAL', 'REDUIT'], true)->validate($typeTarif)) {
+        if (!v::in(['NORMAL', 'REDUIT'], true)->isValid($typeTarif)) {
             throw new HttpBadRequestException($rq, "type de tarif invalide : $typeTarif");
         }
 
@@ -45,7 +41,7 @@ class AjouterAuPanierAction
         }
 
         try {
-            $panierDTO = $this->servicePanier->ajouterBilletAuPanier($panierId, $soireeId, $typeTarif, $quantite);
+            $panierDTO = $this->servicePanier->ajouterBilletAuPanier($UtilisateurId, $soireeId, $typeTarif, $quantite);
         } catch (SoireeNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         } catch (InsufficientSeatsException $e) {

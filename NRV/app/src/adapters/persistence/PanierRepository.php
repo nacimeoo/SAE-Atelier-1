@@ -107,4 +107,17 @@ class PanierRepository implements PanierRepositoryInterface
 
     }
 
+    public function findByUtilisateurId(string $utilisateurId): ?Panier
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM panier WHERE utilisateur_id = :utilisateur_id');
+        $stmt->execute(['utilisateur_id' => $utilisateurId]);
+        $panierData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$panierData) {
+            return null;
+        }
+
+        return $this->findById($panierData['id']);
+    }
+
 }

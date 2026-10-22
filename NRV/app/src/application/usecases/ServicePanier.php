@@ -23,11 +23,8 @@ class ServicePanier implements ServicePanierInterface
         private PanierRepositoryInterface $panierRepository, private SoireeRepositoryInterface $soireeRepository
     ) {}
 
-    public function ajouterBilletAuPanier(string $panierId, string $soireeId, string $typeTarif, int $quantite): PanierDTO
+    public function ajouterBilletAuPanier(string $utilisateurId, string $soireeId, string $typeTarif, int $quantite): PanierDTO
     {
-
-        // TODO remplacer par l'utilisateur authentifié
-        $utilisateurId = 'd9a83e5d-db15-4fc2-b338-37feac7b6d0c';
 
         $tarif = TypeTarif::tryFrom($typeTarif);
         if ($tarif === null) {
@@ -44,10 +41,10 @@ class ServicePanier implements ServicePanierInterface
             throw new InsufficientSeatsException("Quantité demandée ($quantite) dépasse les places disponibles pour la soirée.");
         }
 
-        try {
-            $panier = $this->panierRepository->findById($panierId);
-        } catch (PanierNotFoundException $e) {
-            $panier = new Panier($panierId, $utilisateurId);
+    
+        $panier = $this->panierRepository->findByUtilisateurId($utilisateurId);
+        if (!$panier) {
+            $panier = new Panier(Uuid::uuid4()->toString(), $utilisateurId);
             $this->panierRepository->create($panier);
         }
 
