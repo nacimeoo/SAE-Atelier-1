@@ -34,4 +34,9 @@ class ServiceSpectacle implements ServiceSpectacleInterface
         }
         return $dto;
     }
+
+    public function listerStyles(): array
+    {
+        return $this->repository->findStyle();
+    }
 }

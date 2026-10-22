@@ -31,8 +31,27 @@
         </header>
 
         <section id="spectacles-section">
+            <div class="page-header">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="date-filter">Date</label>
+                        <input type="date" id="date-filter" style="padding: 0.5rem 1rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 1rem;">
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="style-filter">Style</label>
+                        <select id="style-filter">
+                            <option value="">Tous les styles</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group" style="justify-content: flex-end; flex-direction: row;">
+                        <button id="apply-filters" style="cursor: pointer; padding: 0.5rem 1rem;">Filtrer</button>
+                        <button id="reset-filters" style="cursor: pointer; padding: 0.5rem 1rem;">Réinitialiser</button>
+                    </div>
+                </div>
+            </div>
             <div id="spectacles-grid" class="grid-container">
-                <!-- js remplit tout seul automatiquement -->
             </div>
         </section>
 

@@ -2,6 +2,20 @@ const API_BASE_URL = 'http://localhost:7080';
 
 document.addEventListener('DOMContentLoaded', () => {
     chargerSpectacles();
+    chargerStyles();
+
+    const dateFilter = document.getElementById('date-filter');
+    const styleFilter = document.getElementById('style-filter');
+
+    document.getElementById('apply-filters').addEventListener('click', () => {
+        chargerSpectacles(dateFilter.value, styleFilter.value);
+    });
+
+    document.getElementById('reset-filters').addEventListener('click', () => {
+        dateFilter.value = '';
+        styleFilter.value = '';
+        chargerSpectacles();
+    });
 
     document.getElementById('btn-retour').addEventListener('click', () => {
         document.getElementById('spectacles-section').style.display = 'block';
@@ -9,11 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-async function chargerSpectacles() {
+async function chargerSpectacles(date = '', style = '') {
     try {
-        const response = await fetch(`${API_BASE_URL}/spectacles`);
+        const params = new URLSearchParams();
+        if (date) params.set('date', date);
+        if (style) params.set('style', style);
+        const query = params.toString();
+
+        const response = await fetch(`${API_BASE_URL}/spectacles${query ? '?' + query : ''}`);
         const data = await response.json();
         const container = document.getElementById('spectacles-grid');
+        container.innerHTML = '';
+
+        if (data.spectacles.length === 0) {
+            container.innerHTML = '<p>Aucun spectacle ne correspond aux filtres.</p>';
+            return;
+        }
 
         data.spectacles.forEach(spectacle => {
             const card = document.createElement('div');
@@ -34,6 +59,24 @@ async function chargerSpectacles() {
         console.error("Erreur Fetch spectacles :", error);
     }
 }
+
+async function chargerStyles() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/styles`);
+        const data = await response.json();
+        const select = document.getElementById('style-filter');
+        
+        
+        data.styles.forEach(style => {
+            const option = document.createElement('option');
+            option.value = style;
+            option.textContent = style;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erreur Fetch styles :", error);
+    }
+}   
 
 async function chargerSoiree(urlApi) {
     try {

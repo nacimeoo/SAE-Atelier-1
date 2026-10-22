@@ -14,6 +14,9 @@ $builder->addDefinitions(__DIR__ . '/api.php');
 $c=$builder->build();
 $app = AppFactory::createFromContainer($c);
 $app->addBodyParsingMiddleware();
+$app->add(function ($request, $handler) {
+    return $handler->handle($request)->withHeader('Access-Control-Allow-Origin', '*');
+});
 $app->addErrorMiddleware(true, true, true);
 
 $routes = require __DIR__ . '/routes.php';

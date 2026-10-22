@@ -8,4 +8,5 @@ use nrv\application\dto\SpectacleDTO;
 interface ServiceSpectacleInterface
 {
     public function listerSpectacles(?string $date = null, ?string $style = null): array;
+    public function listerStyles(): array;
 }

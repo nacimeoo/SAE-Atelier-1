@@ -24,8 +24,7 @@ class SpectacleRepository implements SpectacleRepositoryInterface
                (SELECT i.url FROM image i WHERE i.spectacle_id = spectacle.id LIMIT 1) AS image 
         FROM spectacle
         JOIN soiree ON soiree.id = spectacle.soiree_id
-        WHERE 1 = 1
-        ORDER BY soiree.date ASC, spectacle.heure ASC';
+        WHERE 1 = 1';
         
         $params = [];
 
@@ -37,6 +36,8 @@ class SpectacleRepository implements SpectacleRepositoryInterface
             $sql .= ' AND spectacle.style = :style';
             $params['style'] = $style;
         }
+
+        $sql .= ' ORDER BY soiree.date ASC, spectacle.heure ASC';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
@@ -58,5 +59,12 @@ class SpectacleRepository implements SpectacleRepositoryInterface
             $spectacles[] = $spectacle;
         }
         return $spectacles;
+    }
+
+    public function findStyle(): array
+    {
+        $sql = 'SELECT DISTINCT style FROM spectacle';
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

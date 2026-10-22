@@ -10,6 +10,7 @@ use nrv\application\ports\api\ServiceSpectacleInterface;
 use nrv\application\ports\spi\SpectacleRepositoryInterface;
 use nrv\application\usecases\ServiceSpectacle;
 use Psr\Container\ContainerInterface;
+use nrv\adapters\actions\GetStylesAction;
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -38,5 +39,9 @@ return [
 
     SpectacleRepositoryInterface::class => function (ContainerInterface $c) {
         return new SpectacleRepository($c->get('nrv.pdo'));
+    },
+
+    GetStylesAction::class => function (ContainerInterface $c) {
+        return new GetStylesAction($c->get(ServiceSpectacleInterface::class));
     },
 ];
