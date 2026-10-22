@@ -38,4 +38,9 @@ class LignePanier
         return $this->pass;
     }
 
+    public function ajouterQuantite(int $quantite): void
+    {
+        $this->quantite += $quantite;
+    }
+
 }

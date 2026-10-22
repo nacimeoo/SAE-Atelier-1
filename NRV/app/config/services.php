@@ -11,6 +11,11 @@ use nrv\application\ports\spi\SpectacleRepositoryInterface;
 use nrv\application\usecases\ServiceSpectacle;
 use Psr\Container\ContainerInterface;
 use nrv\adapters\actions\GetStylesAction;
+use nrv\application\ports\api\ServicePanierInterface;
+use nrv\application\ports\spi\PanierRepositoryInterface;
+use nrv\adapters\actions\AjouterAuPanierAction;
+use nrv\adapters\persistence\PanierRepository;
+use nrv\application\usecases\ServicePanier;
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -43,5 +48,17 @@ return [
 
     GetStylesAction::class => function (ContainerInterface $c) {
         return new GetStylesAction($c->get(ServiceSpectacleInterface::class));
+    },
+
+    ServicePanierInterface::class => function (ContainerInterface $c) {
+        return new ServicePanier($c->get(PanierRepositoryInterface::class), $c->get(SoireeRepositoryInterface::class));
+    },
+
+    PanierRepositoryInterface::class => function (ContainerInterface $c) {
+        return new PanierRepository($c->get('nrv.pdo'), $c->get(SoireeRepositoryInterface::class));
+    },
+
+    AjouterAuPanierAction::class => function (ContainerInterface $c) {
+        return new AjouterAuPanierAction($c->get(ServicePanierInterface::class));
     },
 ];

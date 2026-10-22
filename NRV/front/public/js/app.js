@@ -3,6 +3,7 @@ const API_BASE_URL = 'http://localhost:7080';
 document.addEventListener('DOMContentLoaded', () => {
     chargerSpectacles();
     chargerStyles();
+    afficherCompteur();
 
     const dateFilter = document.getElementById('date-filter');
     const styleFilter = document.getElementById('style-filter');
@@ -161,12 +162,14 @@ async function chargerSoiree(urlApi) {
                         </div>
 
                         <button class="btn-primary">Ajouter au panier</button>
+                        <div id="message-panier" class="message-panier"></div>
                     </div>
                 </aside>
             </div>
         `;
 
         detailContainer.innerHTML = html;
+        initBilleterie(soiree);
 
         document.getElementById('spectacles-section').style.display = 'none';
         document.getElementById('page-header-title').style.display = 'none';
@@ -175,4 +178,93 @@ async function chargerSoiree(urlApi) {
     } catch (error) {
         console.error("Erreur Fetch soirée :", error);
     }
+}
+
+function getPanierId() {
+    let panierId = localStorage.getItem('panierId');
+    if (!panierId) {
+        panierId = crypto.randomUUID();
+        localStorage.setItem('panierId', panierId);
+    }
+    return panierId;
+}
+
+function updateCompteur(lignes) {
+    const total = lignes.reduce((sum, ligne) => sum + ligne.quantite, 0);
+    localStorage.setItem('panierTotal', total);
+    afficherCompteur();
+}
+
+function afficherCompteur() {
+    const total = localStorage.getItem('panierTotal') || 0;
+    const compteur = document.getElementById('compteur-panier');
+    compteur.textContent = total;
+}
+
+async function ajouterAuPanier(soireeId, quantite) {
+    const response = await fetch(`${API_BASE_URL}/panier/${getPanierId()}/lignes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            soiree_id: soireeId,
+            type_tarif: 'NORMAL',
+            quantite: quantite
+        })
+    });
+
+    if (response.status === 201) {
+        const data = await response.json();
+        updateCompteur(data.panier.lignes);
+        return { success: true, message: "Billets ajoutés au panier" };
+    }
+
+    if (response.status === 422) {
+        const data = await response.json();
+        return { success: false, message: data.message };
+    }
+    
+    return { success: false, message: "Erreur lors de l'ajout au panier" };
+}
+
+function initBilleterie(soiree) {
+    const [minusBtn, plusBtn] = document.querySelectorAll('.btn-qty');
+    const qty = document.querySelector('.qty');
+    const totalPriceSpan = document.querySelector('.total-price');
+    const messageDiv = document.getElementById('message-panier');
+    let quantite = 0;
+
+    const updateTotal = () => {
+        qty.textContent = quantite;
+        totalPriceSpan.textContent = (quantite * soiree.tarif).toFixed(2) + " €";
+    };
+
+    minusBtn.addEventListener('click', () => {
+        if (quantite > 0) {
+            quantite--;
+            updateTotal();
+        }
+    });
+
+    plusBtn.addEventListener('click', () => {
+        if (quantite < soiree.places_restantes) {
+            quantite++;
+            updateTotal();
+        }
+    });
+
+    document.querySelector('.btn-primary').addEventListener('click', async () => {
+        if (quantite === 0) {
+            messageDiv.textContent = "Veuillez sélectionner au moins un billet.";
+            return;
+        }
+        
+        const result = await ajouterAuPanier(soiree.id, quantite);
+        messageDiv.textContent = result.message;
+        if (result.success) {
+            quantite = 0;
+            updateTotal();
+        }
+    });
 }

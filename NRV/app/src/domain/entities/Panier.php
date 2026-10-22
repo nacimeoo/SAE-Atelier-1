@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace nrv\domain\entities;
+use nrv\domain\entities\LignePanier;
 
 class Panier
 {
@@ -24,6 +25,19 @@ class Panier
     public function getLignesCommande(): array
     {
         return $this->lignesCommande;   
+    }
+
+    public function ajouterLignePanier(LignePanier $lignePanier): void
+    {
+        foreach ($this->lignesCommande as $ligne) {
+            if ($ligne->getSoiree()?->getId() === $lignePanier->getSoiree()?->getId()
+                && $ligne->getTypeTarif() === $lignePanier->getTypeTarif()) {
+                $ligne->ajouterQuantite($lignePanier->getQuantite());
+                return;
+            }
+        }
+
+        $this->lignesCommande[] = $lignePanier;
     }
 
 
