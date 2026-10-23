@@ -7,8 +7,12 @@ MEZIANI Fahim
 
 VALEUR--MASELLI Marius
 
+## Url de test sur docketu : 
 
-# Rendu Intermediare
+http://docketu.iutnc.univ-lorraine.fr:24001/
+
+
+# Documents
 
 Les maquettes d'interface, le modèle du domaine métier ainsi que les scenario d'usage se trouve a la racine du projet dans un dossier documents
 
@@ -20,7 +24,7 @@ git clone https://github.com/nacimeoo/SAE-Atelier-1.git
 cd SAE-Atelier-1/NRV
 ```
 
-2. Créer le fichier `.env` à la racine de `NRV/`  :
+2. Créer le fichier `nrv.env` à la racine de `NRV/`  :
 ```env
 POSTGRES_DB=nrv
 POSTGRES_USER=root
@@ -28,18 +32,24 @@ POSTGRES_PASSWORD=1234
 ADMINER_DEFAULT_SERVER=sql.db
 ```
 
-3. Lancer les conteneurs :
+3. Créer le fichier `app/config/.env` à partir du modèle :
+```bash
+cp app/config/.env.dist app/config/.env
+```
+Remplacer la valeur de `jwt.secret` par une longue chaîne aléatoire de 32 caracteres.
+
+4. Lancer les conteneurs :
 ```bash
 docker compose up -d
 ```
 
 ## Services
  
-| Service | URL |
+| Service | Port |
 |---|---|
-| Front | http://localhost:7081 |
-| API | http://localhost:7080 |
-| Adminer | http://localhost:7082 |
+| Front | 24001 |
+| API | 24000 |
+| Adminer | 24002 |
 
 
 ## Comptes de test

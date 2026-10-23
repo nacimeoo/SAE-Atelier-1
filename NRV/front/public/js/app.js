@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:7080'; 
+const API_BASE_URL = `http://${location.hostname}:24000`;
 
 document.addEventListener('DOMContentLoaded', () => {
     chargerSpectacles();
