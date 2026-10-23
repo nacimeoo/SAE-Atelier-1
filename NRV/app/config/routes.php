@@ -12,6 +12,7 @@ use nrv\adapters\middlewares\UtilisateurMiddleware;
 use nrv\adapters\actions\GetPanierAction;
 use nrv\adapters\actions\GetBilletsAction;
 use nrv\adapters\actions\GetJaugesAction;
+use nrv\adapters\actions\GetBilletParTokenAction;
 use nrv\adapters\middlewares\RoleMiddleware;
 use nrv\adapters\actions\ValiderCommandeAction;
 
@@ -37,6 +38,8 @@ return function (\Slim\App $app): \Slim\App {
     $app->get('/panier', GetPanierAction::class)->add(UtilisateurMiddleware::class)->setName('panier');
 
     $app->get('/billets', GetBilletsAction::class)->add(UtilisateurMiddleware::class)->setName('billets');
+
+    $app->get('/billets/{token}', GetBilletParTokenAction::class)->setName('billet');
 
     $app->get('/jauges', GetJaugesAction::class)
         ->add(RoleMiddleware::class)

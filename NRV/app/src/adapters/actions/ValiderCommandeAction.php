@@ -25,7 +25,12 @@ class ValiderCommandeAction
         $rs->getBody()->write(json_encode([
             'type' => 'resource',
             'message' => 'Commande créée avec succès',
-            'commande_id' => $commandeId
+            'commande_id' => $commandeId,
+            '_links' => [
+                'self' => ['href' => '/commandes', 'method' => 'POST'],
+                'billets' => ['href' => '/billets'],
+                'panier' => ['href' => '/panier']
+            ]
         ]));
         
         return $rs->withHeader('Content-Type', 'application/json')

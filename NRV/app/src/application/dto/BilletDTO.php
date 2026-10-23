@@ -8,6 +8,7 @@ class BilletDTO
     public function __construct(
         public string $id,
         public string $reference,
+        public string $token,
         public string $acheteur,
         public string $libelle,
         public ?string $date,
@@ -22,6 +23,7 @@ class BilletDTO
         return [
             'id'         => $this->id,
             'reference'  => $this->reference,
+            'token'      => $this->token,
             'acheteur'   => $this->acheteur,
             'libelle'    => $this->libelle,
             'date'       => $this->date,
@@ -29,6 +31,7 @@ class BilletDTO
             'lieu'       => $this->lieu,
             'type_tarif' => $this->typeTarif,
             'prix'       => $this->prix,
+            '_links'     => ['self' => ['href' => '/billets/' . $this->token]],
         ];
     }
 }

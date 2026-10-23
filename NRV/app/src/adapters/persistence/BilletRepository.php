@@ -42,6 +42,31 @@ class BilletRepository implements BilletRepositoryInterface
         return $billets;
     }
 
+    public function findByToken(string $token): ?Billet
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT billet.id, billet.reference, billet.token, billet.type_tarif, billet.prix, billet.soiree_id, utilisateur.nom, utilisateur.prenom FROM billet
+             JOIN commande ON commande.id = billet.commande_id
+             JOIN utilisateur ON utilisateur.id = commande.utilisateur_id
+             WHERE billet.token = :token AND commande.statut = 'PAYEE' AND billet.soiree_id IS NOT NULL"
+        );
+        $stmt->execute(['token' => $token]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+
+        return new Billet(
+            $row['id'],
+            $row['reference'],
+            $row['token'],
+            TypeTarif::from($row['type_tarif']),
+            (float)$row['prix'],
+            $this->soireeRepository->findById($row['soiree_id']),
+            $row['prenom'] . ' ' . $row['nom']
+        );
+    }
+
     public function statistiquesParSoiree(): array
     {
         $stmt = $this->pdo->query(

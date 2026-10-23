@@ -22,6 +22,7 @@ class ServiceBillet implements ServiceBilletInterface
             $dto[] = new BilletDTO(
                 $billet->getId(),
                 $billet->getReference(),
+                $billet->getToken(),
                 $billet->getAcheteur(),
                 $soiree->getNom(),
                 $soiree->getDate()->format('Y-m-d'),
@@ -32,6 +33,27 @@ class ServiceBillet implements ServiceBilletInterface
             );
         }
         return $dto;
+    }
+
+    public function getBilletParToken(string $token): BilletDTO
+    {
+        $billet = $this->billetRepository->findByToken($token);
+        if ($billet === null) {
+            throw new \Exception('Billet introuvable');
+        }
+        $soiree = $billet->getSoiree();
+        return new BilletDTO(
+            $billet->getId(),
+            $billet->getReference(),
+            $billet->getToken(),
+            $billet->getAcheteur(),
+            $soiree->getNom(),
+            $soiree->getDate()->format('Y-m-d'),
+            $soiree->getHeureDebut()->format('H:i'),
+            $soiree->getLieu()->getNom(),
+            $billet->getTypeTarif()->value,
+            $billet->getPrix()
+        );
     }
 
     public function listerJaugesSoirees(): array

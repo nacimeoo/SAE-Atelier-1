@@ -27,6 +27,7 @@ use nrv\adapters\actions\RegisterAction;
 use nrv\adapters\middlewares\UtilisateurMiddleware;
 use nrv\adapters\actions\GetPanierAction;
 use nrv\adapters\actions\GetBilletsAction;
+use nrv\adapters\actions\GetBilletParTokenAction;
 use nrv\adapters\persistence\BilletRepository;
 use nrv\application\ports\api\ServiceBilletInterface;
 use nrv\application\ports\spi\BilletRepositoryInterface;
@@ -119,6 +120,10 @@ return [
 
     ServiceBilletInterface::class => function (ContainerInterface $c) {
         return new ServiceBillet($c->get(BilletRepositoryInterface::class));
+    },
+
+    GetBilletParTokenAction::class => function (ContainerInterface $c) {
+        return new GetBilletParTokenAction($c->get(ServiceBilletInterface::class));
     },
 
     GetBilletsAction::class => function (ContainerInterface $c) {
