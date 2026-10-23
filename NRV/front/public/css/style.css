@@ -1,4 +1,4 @@
-.panier__valider {
+.panier__valider, .paiement__payer, .paiement__billets {
   width: 100%;
   padding: 1rem;
   border: none;
@@ -9,14 +9,72 @@
   font-weight: bold;
   cursor: pointer;
 }
-.panier__valider:hover {
+.panier__valider:hover, .paiement__payer:hover, .paiement__billets:hover {
   filter: brightness(90%);
 }
-.panier__valider:disabled {
+.panier__valider:disabled, .paiement__payer:disabled, .paiement__billets:disabled {
   opacity: 0.6;
   cursor: wait;
 }
 
+.paiement {
+  max-width: 30rem;
+  margin: 0 auto;
+}
+.paiement__titre {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+.paiement__info {
+  margin-bottom: 1.5rem;
+  color: #666666;
+}
+.paiement__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.paiement__form[hidden] {
+  display: none;
+}
+.paiement__ligne {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+@media screen and (min-width: 48em) {
+  .paiement__ligne {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+.paiement__groupe {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.paiement__label {
+  font-weight: bold;
+}
+.paiement__champ {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 0.0625rem solid #e0e0e0;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+}
+.paiement__champ:focus {
+  outline: 0.125rem solid #e64a19;
+  outline-offset: 0.125rem;
+}
+.paiement__payer {
+  margin-top: 1rem;
+}
+.paiement__message {
+  min-height: 1.5em;
+  margin: 0.5rem 0 1rem;
+}
 .panier__retour {
   margin-bottom: 1rem;
   background: none;

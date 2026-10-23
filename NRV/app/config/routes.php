@@ -15,6 +15,7 @@ use nrv\adapters\actions\GetJaugesAction;
 use nrv\adapters\actions\GetBilletParTokenAction;
 use nrv\adapters\middlewares\RoleMiddleware;
 use nrv\adapters\actions\ValiderCommandeAction;
+use nrv\adapters\actions\PayerCommandeAction;
 
 return function (\Slim\App $app): \Slim\App {
 
@@ -49,6 +50,9 @@ return function (\Slim\App $app): \Slim\App {
     $app->post('/commandes', ValiderCommandeAction::class)
     ->add(UtilisateurMiddleware::class)
     ->setName('valider_commande');
+
+    
+    $app->post('/commandes/{id}/paiement', PayerCommandeAction::class)->add(UtilisateurMiddleware::class)->setName('payer_commande');
 
     return $app;
 };

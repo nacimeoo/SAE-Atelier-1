@@ -97,6 +97,29 @@
             </div>
         </section>
 
+
+                <section id="paiement-section" class="paiement" hidden>
+            <h1 class="paiement__titre">Paiement</h1>
+            <p class="paiement__info">Paiement </p>
+            <form id="paiement-form" class="paiement__form">
+                <label class="paiement__label" for="paiement-numero">Numéro de carte</label>
+                <input class="paiement__champ" id="paiement-numero" inputmode="numeric" autocomplete="cc-number" placeholder="4970 1020 3344 1987" required>
+                <div class="paiement__ligne">
+                    <div class="paiement__groupe">
+                        <label class="paiement__label" for="paiement-expiration">Expiration (MM/AA)</label>
+                        <input class="paiement__champ" id="paiement-expiration" autocomplete="cc-exp" placeholder="12/28" required>
+                    </div>
+                    <div class="paiement__groupe">
+                        <label class="paiement__label" for="paiement-cvc">Code de sécurité</label>
+                        <input class="paiement__champ" id="paiement-cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="3" placeholder="123" required>
+                    </div>
+                </div>
+                <button type="submit" id="btn-payer" class="paiement__payer">Payer</button>
+            </form>
+            <p id="paiement-message" class="paiement__message" role="status"></p>
+            <button id="btn-voir-billets" class="paiement__billets" hidden>Voir mes billets</button>
+        </section>
+
         <section id="auth-section" hidden>
             <button id="btn-retour-auth">← Retour au programme</button>
 

@@ -40,6 +40,7 @@ use nrv\adapters\persistence\CommandeRepository;
 use nrv\application\ports\api\ServiceCommandeInterface;
 use nrv\application\usecases\ServiceCommande;
 use nrv\adapters\actions\ValiderCommandeAction;
+use nrv\adapters\actions\PayerCommandeAction;
 
 
 return [
@@ -143,11 +144,20 @@ return [
     },
 
     ServiceCommandeInterface::class => function (\Psr\Container\ContainerInterface $c) {
-        return new ServiceCommande($c->get(\nrv\application\ports\spi\PanierRepositoryInterface::class), $c->get(CommandeRepositoryInterface::class));
+        return new ServiceCommande(
+            $c->get(PanierRepositoryInterface::class),
+            $c->get(CommandeRepositoryInterface::class),
+            $c->get(SoireeRepositoryInterface::class)
+        );
     },
 
     ValiderCommandeAction::class => function (\Psr\Container\ContainerInterface $c) {
         return new ValiderCommandeAction($c->get(ServiceCommandeInterface::class));
+    },
+
+    
+    PayerCommandeAction::class => function (ContainerInterface $c) {
+        return new PayerCommandeAction($c->get(ServiceCommandeInterface::class));
     },
 
 ];

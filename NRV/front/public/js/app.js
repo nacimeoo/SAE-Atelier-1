@@ -314,6 +314,7 @@ function afficherSection(nom) {
     document.getElementById('billets-section').hidden = nom !== 'billets';
     document.getElementById('jauges-section').hidden = nom !== 'jauges';
     document.getElementById('panier-section').hidden = nom !== 'panier';
+        document.getElementById('paiement-section').style.display = nom === 'paiement' ? 'block' : 'none';
 }
 
 async function chargerBillets() {
@@ -466,6 +467,8 @@ function initAuth() {
     });
 
     document.getElementById('btn-valider-panier').addEventListener('click', validerPanier);
+    document.getElementById('paiement-form').addEventListener('submit', payerCommande);
+    document.getElementById('btn-voir-billets').addEventListener('click', chargerBillets);
 
     document.getElementById('btn-retour').addEventListener('click', () => {
         afficherSection('programme');
@@ -649,7 +652,7 @@ async function chargerPanier() {
         afficherCompteur();
     } catch (error) {
         console.error("Erreur Fetch panier :", error);
-        liste.innerHTML = '<li class="panier__vide">Impossible de joindre le serveur.</li>';
+        liste.innerHTML = '<li class="panier__vide"> serveur pas joignable</li>';
     }
 }
 
@@ -669,19 +672,83 @@ async function validerPanier() {
         });
 
         if (response.status === 201) {
-            message.textContent = 'Commande créée. Vous pouvez passer au paiement.';
+            const data = await response.json();
+            localStorage.setItem('panierTotal', 0);
+            afficherCompteur();
+            afficherPaiement(data._links.payer.href);
         } else if (response.status === 401) {
             deconnecter();
             afficherSection('auth');
         } else if (response.status === 404) {
-            message.textContent = "La validation des commandes n'est pas encore disponible.";
+            message.textContent = "pas disponible";
         } else {
-            message.textContent = 'Erreur lors de la validation du panier.';
+            message.textContent = 'Erreu';
         }
     } catch (error) {
         console.error("Erreur validation panier :", error);
-        message.textContent = 'Impossible de joindre le serveur.';
+        message.textContent = 'serveur injoignable';
     } finally {
         btnValider.disabled = false;
+    }
+}
+
+function afficherPaiement(urlPaiement) {
+    const form = document.getElementById('paiement-form');
+    form.reset();
+    form.hidden = false;
+    form.dataset.href = urlPaiement;
+    document.getElementById('btn-payer').textContent =
+        'Payer ' + document.getElementById('panier-total').textContent;
+    document.getElementById('paiement-message').textContent = '';
+    document.getElementById('btn-voir-billets').hidden = true;
+    afficherSection('paiement');
+}
+
+async function payerCommande(e) {
+    e.preventDefault();
+    const form = document.getElementById('paiement-form');
+    const btnPayer = document.getElementById('btn-payer');
+    const message = document.getElementById('paiement-message');
+    const token = getToken();
+
+    btnPayer.disabled = true;
+    message.textContent = '';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${form.dataset.href}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                numero_carte: document.getElementById('paiement-numero').value,
+                expiration: document.getElementById('paiement-expiration').value,
+                cvc: document.getElementById('paiement-cvc').value
+            })
+        });
+
+        if (response.ok) {
+            form.hidden = true;
+            document.getElementById('btn-voir-billets').hidden = false;
+            message.textContent = 'gg accepter Vos billets sont disponibles.';
+            return;
+        }
+        if (response.status === 401) {
+            deconnecter();
+            afficherSection('auth');
+            return;
+        }
+        if (response.status === 404) {
+            message.textContent = 'Commande introuvable.';
+            return;
+        }
+        const data = await response.json();
+        message.textContent = data.message || 'refuser';
+    } catch (error) {
+        console.error("Erreur paiement :", error);
+        message.textContent = 'serveur injoignable.';
+    } finally {
+        btnPayer.disabled = false;
     }
 }

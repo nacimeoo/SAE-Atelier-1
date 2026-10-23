@@ -5,6 +5,7 @@ namespace nrv\domain\entities;
 
 use nrv\domain\entities\Lieu;
 use nrv\domain\entities\TypeTarif;
+use nrv\domain\exceptions\PlacesInsuffisantesException;
 
 class Soiree
 {
@@ -77,9 +78,15 @@ class Soiree
     }
 
 
-        public function estComplete(): bool
+
+    public function vendrePlaces(int $nombre): void
     {
-        return $this->getPlacesRestantes() === 0;
+        if ($nombre > $this->getPlacesRestantes()) {
+            throw new PlacesInsuffisantesException(
+                "nbr de place insuffisant « {$this->nom} » : {$this->getPlacesRestantes()} restante(s), $nombre demandée(s)."
+            );
+        }
+        $this->nbPlacesVendues += $nombre;
     }
 
 }

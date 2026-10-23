@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace nrv\domain\entities;
 
 use nrv\domain\entities\StatutCommande;
+use nrv\domain\exceptions\CommandeDejaPayeeException;
 
 class Commande
 {
@@ -44,6 +45,20 @@ class Commande
     public function getBillets(): array
     {
         return $this->billets;
+    }
+
+    
+    public function estPayee(): bool
+    {
+        return $this->statut === StatutCommande::PAYEE;
+    }
+
+    public function payer(): void
+    {
+        if ($this->estPayee()) {
+            throw new CommandeDejaPayeeException("La commande {$this->id} deja payer");
+        }
+        $this->statut = StatutCommande::PAYEE;
     }
 }
     

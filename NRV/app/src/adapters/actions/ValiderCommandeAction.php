@@ -22,19 +22,18 @@ class ValiderCommandeAction
             throw new HttpBadRequestException($rq, $e->getMessage());
         }
 
-        $rs->getBody()->write(json_encode([
+                $rs->getBody()->write(json_encode([
             'type' => 'resource',
             'message' => 'Commande créée avec succès',
             'commande_id' => $commandeId,
             '_links' => [
-                'self' => ['href' => '/commandes', 'method' => 'POST'],
-                'paiement' => ['href' => "/commandes/$commandeId/paiement", 'method' => 'POST'],
-                'billets' => ['href' => '/billets'],
-                'panier' => ['href' => '/panier']
-            ]
+                'self'  => ['href' => "/commandes/$commandeId"],
+                'payer' => ['href' => "/commandes/$commandeId/paiement", 'method' => 'POST'],
+            ],
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         
         return $rs->withHeader('Content-Type', 'application/json')
+                  ->withHeader('Location', "/commandes/$commandeId")
                   ->withHeader('Access-Control-Allow-Origin', '*')
                   ->withStatus(201);
     }
