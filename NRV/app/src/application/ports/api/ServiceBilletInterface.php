@@ -8,4 +8,6 @@ use nrv\application\dto\BilletDTO;
 interface ServiceBilletInterface
 {
     public function listerBilletsUtilisateur(string $utilisateurId): array;
+    public function listerJaugesSoirees(): array;
+
 }

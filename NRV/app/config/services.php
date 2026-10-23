@@ -31,6 +31,9 @@ use nrv\adapters\persistence\BilletRepository;
 use nrv\application\ports\api\ServiceBilletInterface;
 use nrv\application\ports\spi\BilletRepositoryInterface;
 use nrv\application\usecases\ServiceBillet;
+use nrv\adapters\actions\GetJaugesAction;
+use nrv\adapters\middlewares\RoleMiddleware;
+
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -114,6 +117,14 @@ return [
 
     GetBilletsAction::class => function (ContainerInterface $c) {
         return new GetBilletsAction($c->get(ServiceBilletInterface::class));
+    },
+
+    RoleMiddleware::class => function (ContainerInterface $c) {
+        return new RoleMiddleware();
+    },
+
+    GetJaugesAction::class => function (ContainerInterface $c) {
+        return new GetJaugesAction($c->get(ServiceBilletInterface::class));
     },
 
 ];

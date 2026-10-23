@@ -295,6 +295,7 @@ function getUser(){
 function enregistrerSession(token, user) {
     localStorage.setItem('nrv_token', token);
     localStorage.setItem('nrv_prenom', user.prenom);
+    localStorage.setItem('nrv_role', user.role);
     afficherUtilisateur();
 }
 
@@ -304,6 +305,7 @@ function afficherUtilisateur() {
     document.getElementById('zone-user').style.display = prenom ? 'inline' : 'none';
     document.getElementById('nom-utilisateur').textContent = prenom || '';
     document.getElementById('lien-billets').style.display = prenom ? 'inline' : 'none';
+    document.getElementById('lien-jauges').style.display = localStorage.getItem('nrv_role') === 'GESTIONNAIRE' ? 'inline' : 'none';
 }
 
 function afficherSection(nom) {
@@ -312,6 +314,8 @@ function afficherSection(nom) {
     document.getElementById('soiree-section').style.display = nom === 'soiree' ? 'block' : 'none';
     document.getElementById('auth-section').style.display = nom === 'auth' ? 'block' : 'none';
     document.getElementById('billets-section').style.display = nom === 'billets' ? 'block' : 'none';
+    document.getElementById('jauges-section').style.display = nom === 'jauges' ? 'block' : 'none';
+
 }
 
 async function chargerBillets() {
@@ -373,7 +377,7 @@ async function chargerBillets() {
 }
 
 function deconnecter() {
-    ['nrv_token', 'nrv_prenom', 'panierTotal'].forEach(cle => localStorage.removeItem(cle));
+    ['nrv_token', 'nrv_prenom','nrv_role', 'panierTotal'].forEach(cle => localStorage.removeItem(cle));
     afficherUtilisateur();
     afficherCompteur();
 }
@@ -444,6 +448,15 @@ function initAuth() {
         afficherSection('programme');
     });
 
+    document.getElementById('lien-jauges').addEventListener('click', (e) => {
+        e.preventDefault();
+        chargerJauges();
+    });
+
+    document.getElementById('btn-retour-jauges').addEventListener('click', () => {
+        afficherSection('programme');
+    });
+
     document.getElementById('btn-retour').addEventListener('click', () => {
         afficherSection('programme');
     });
@@ -507,3 +520,56 @@ function initAuth() {
         }
     });
 }
+
+async function chargerJauges() {
+    const container = document.getElementById('jauges-liste');
+    const token = getToken();
+    if (!token) {
+        afficherSection('auth');
+        return;
+    }
+
+    afficherSection('jauges');
+    container.innerHTML = '<p>Chargement...</p>';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/jauges`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 403) {
+            container.innerHTML = '<p>Accès réservé aux gestionnaires.</p>';
+            return;
+        }
+        if (!response.ok) {
+            container.innerHTML = '<p>Erreur lors du chargement des jauges.</p>';
+            return;
+        }
+
+        const data = await response.json();
+        container.innerHTML = `
+            <table class="jauges-table">
+                <thead>
+                    <tr><th>Soirée</th><th>Date</th><th>Lieu</th><th>Jauge</th><th>Recette</th></tr>
+                </thead>
+                <tbody>
+                    ${data.soirees.map(s => `
+                        <tr>
+                            <td>${s.nom}</td>
+                            <td>${s.date}</td>
+                            <td>${s.lieu}</td>
+                            <td>
+                                <div class="jauge-barre"><div class="jauge-remplie" style="width: ${Math.min(s.taux_remplissage, 100)}%"></div></div>
+                                ${s.places_vendues} / ${s.capacite} (${s.taux_remplissage} %)
+                            </td>
+                            <td>${s.recette.toFixed(2)} €</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>`;
+    } catch (error) {
+        console.error("Erreur Fetch jauges :", error);
+        container.innerHTML = '<p>Impossible de joindre le serveur.</p>';
+    }
+}
+

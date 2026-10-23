@@ -6,4 +6,6 @@ namespace nrv\application\ports\spi;
 interface BilletRepositoryInterface
 {
     public function findPayesByUtilisateurId(string $utilisateurId): array;
+    public function statistiquesParSoiree(): array;
+
 }

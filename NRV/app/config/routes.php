@@ -11,6 +11,8 @@ use nrv\adapters\actions\RegisterAction;
 use nrv\adapters\middlewares\UtilisateurMiddleware;
 use nrv\adapters\actions\GetPanierAction;
 use nrv\adapters\actions\GetBilletsAction;
+use nrv\adapters\actions\GetJaugesAction;
+use nrv\adapters\middlewares\RoleMiddleware;
 
 return function (\Slim\App $app): \Slim\App {
 
@@ -34,6 +36,11 @@ return function (\Slim\App $app): \Slim\App {
     $app->get('/panier', GetPanierAction::class)->add(UtilisateurMiddleware::class)->setName('panier');
 
     $app->get('/billets', GetBilletsAction::class)->add(UtilisateurMiddleware::class)->setName('billets');
+
+    $app->get('/jauges', GetJaugesAction::class)
+        ->add(RoleMiddleware::class)
+        ->add(UtilisateurMiddleware::class)
+        ->setName('jauges');
 
     return $app;
 };

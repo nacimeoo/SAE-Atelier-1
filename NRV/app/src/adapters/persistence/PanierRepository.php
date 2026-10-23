@@ -101,10 +101,6 @@ class PanierRepository implements PanierRepositoryInterface
                 ]);
             }
         }
-
-
-
-
     }
 
     public function findByUtilisateurId(string $utilisateurId): ?Panier

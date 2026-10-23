@@ -153,3 +153,27 @@
     .billet { border-color: #000; margin-bottom: 1rem; }
     .billet-ref { color: #000; }
 }
+
+
+.jauges-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+.jauges-table th, .jauges-table td { 
+    padding: 0.6rem; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+}
+.jauge-barre { 
+    background: #e5e5e5; 
+    border-radius: 4px; 
+    height: 10px; 
+    width: 160px; 
+    margin-bottom: 4px; 
+}
+.jauge-remplie { 
+    background: #d6336c; 
+    height: 100%; 
+    border-radius: 4px; 
+}
+
