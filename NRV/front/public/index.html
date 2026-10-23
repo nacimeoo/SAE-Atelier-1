@@ -41,7 +41,7 @@
                 <div class="filters">
                     <div class="filter-group">
                         <label for="date-filter">Date</label>
-                        <input type="date" id="date-filter" style="padding: 0.5rem 1rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 1rem;">
+                        <input type="date" id="date-filter">
                     </div>
 
                     <div class="filter-group">
@@ -51,9 +51,9 @@
                         </select>
                     </div>
 
-                    <div class="filter-group" style="justify-content: flex-end; flex-direction: row;">
-                        <button id="apply-filters" style="cursor: pointer; padding: 0.5rem 1rem;">Filtrer</button>
-                        <button id="reset-filters" style="cursor: pointer; padding: 0.5rem 1rem;">Réinitialiser</button>
+                    <div class="filter-group">
+                        <button id="apply-filters">Filtrer</button>
+                        <button id="reset-filters">Réinitialiser</button>
                     </div>
                 </div>
             </div>
@@ -62,12 +62,12 @@
         </section>
 
         <section id="soiree-section" style="display: none;">
-            <button id="btn-retour" style="margin-bottom: 2rem; cursor: pointer; padding: 0.5rem 1rem;">← Retour au programme</button>
+            <button id="btn-retour">← Retour au programme</button>
             <div id="soiree-detail"></div>
         </section>
 
         <section id="billets-section" style="display: none;">
-            <button id="btn-retour-billets" style="margin-bottom: 2rem; cursor: pointer; padding: 0.5rem 1rem;">← Retour au programme</button>
+            <button id="btn-retour-billets">← Retour au programme</button>
             <h1>Mes billets</h1>
             <div class="billets-actions">
                 <button id="btn-imprimer" class="btn-primary" style="display: none;">Imprimer mes billets</button>
@@ -76,7 +76,7 @@
         </section>
 
         <section id="auth-section" style="display: none;">
-            <button id="btn-retour-auth" style="margin-bottom: 2rem; cursor: pointer; padding: 0.5rem 1rem;">← Retour au programme</button>
+            <button id="btn-retour-auth">← Retour au programme</button>
 
             <div class="auth-card">
                 <form id="login-form">

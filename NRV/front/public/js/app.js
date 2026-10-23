@@ -451,13 +451,13 @@ function initAuth() {
     document.getElementById('vers-inscription').addEventListener('click', (e) => {
         e.preventDefault();
         loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
+        registerForm.style.display = 'flex';
     });
 
     document.getElementById('vers-connexion').addEventListener('click', (e) => {
         e.preventDefault();
         registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
+        loginForm.style.display = 'flex';
     });
 
     loginForm.addEventListener('submit', async (e) => {
