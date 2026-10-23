@@ -89,5 +89,10 @@ class Soiree
         $this->nbPlacesVendues += $nombre;
     }
 
+        public function estComplete(): bool
+    {
+        return $this->getPlacesRestantes() === 0;
+    }
+
 }
     
