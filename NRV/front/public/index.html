@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nancy Rock Vibration - Programme</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/billets.css">
 </head>
 <body>
     <header class="main-header">
@@ -22,6 +23,7 @@
                 <span id="nom-utilisateur"></span>
                 <a href="#" id="lien-deconnexion">Déconnexion</a>
             </span>
+            <a href="#" id="lien-billets" style="display: none;">Mes billets</a>
             <a href="#"><strong>Panier <span id="compteur-panier">0</span></strong></a>
         </div>
     </header>
@@ -62,6 +64,15 @@
         <section id="soiree-section" style="display: none;">
             <button id="btn-retour" style="margin-bottom: 2rem; cursor: pointer; padding: 0.5rem 1rem;">← Retour au programme</button>
             <div id="soiree-detail"></div>
+        </section>
+
+        <section id="billets-section" style="display: none;">
+            <button id="btn-retour-billets" style="margin-bottom: 2rem; cursor: pointer; padding: 0.5rem 1rem;">← Retour au programme</button>
+            <h1>Mes billets</h1>
+            <div class="billets-actions">
+                <button id="btn-imprimer" class="btn-primary" style="display: none;">Imprimer mes billets</button>
+            </div>
+            <div id="billets-liste" class="billets-liste"></div>
         </section>
 
         <section id="auth-section" style="display: none;">

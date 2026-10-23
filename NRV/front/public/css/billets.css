@@ -1,0 +1,35 @@
+.billets-actions { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
+.billets-liste { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.billet {
+    display: flex;
+    border: 2px dashed #333;
+    border-radius: 8px;
+    background: #fff;
+    max-width: 640px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+.billet-main { flex: 1; padding: 1.25rem 1.5rem; }
+.billet-main h3 { margin: 0 0 0.75rem; }
+.billet-main p { margin: 0.25rem 0; }
+.billet-main .label { color: #777; font-size: 0.8rem; text-transform: uppercase; display: block; }
+.billet-side {
+    border-left: 2px dashed #333;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 140px;
+    text-align: center;
+}
+.billet-ref { font-family: monospace; font-size: 1.1rem; font-weight: bold; }
+
+@media print {
+    .main-header, .page-header, .billets-actions, #btn-retour-billets,
+    #spectacles-section, #soiree-section, #auth-section { display: none !important; }
+    body { background: #fff; }
+    .container { padding: 0; margin: 0; max-width: none; }
+    .billet { border-color: #000; margin-bottom: 1rem; }
+}

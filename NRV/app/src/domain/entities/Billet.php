@@ -14,6 +14,7 @@ class Billet
         private TypeTarif $typeTarif,
         private float $prix,
         private Soiree $soiree,
+        private string $acheteur = '',
     ) {}
 
 
@@ -45,6 +46,11 @@ class Billet
     public function getSoiree(): Soiree
     {
         return $this->soiree;
+    }
+
+    public function getAcheteur(): string
+    {
+        return $this->acheteur;
     }
 
     

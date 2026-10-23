@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chargerSpectacles();
     chargerStyles();
     afficherCompteur();
+    afficherUtilisateur();
     initAuth();
 
     const dateFilter = document.getElementById('date-filter');
@@ -205,7 +206,7 @@ async function ajouterAuPanier(soireeId, quantite) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ${token}'
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 soiree_id: soireeId,
@@ -221,7 +222,6 @@ async function ajouterAuPanier(soireeId, quantite) {
         }
 
         if (response.status === 401) {
-            const data = await response.json();
             deconnecter();
             afficherSection('auth');
             return { success: false, message: "Session expiré reconnectez vous" };
@@ -303,6 +303,7 @@ function afficherUtilisateur() {
     document.getElementById('lien-connexion').style.display = prenom ? 'none' : 'inline';
     document.getElementById('zone-user').style.display = prenom ? 'inline' : 'none';
     document.getElementById('nom-utilisateur').textContent = prenom || '';
+    document.getElementById('lien-billets').style.display = prenom ? 'inline' : 'none';
 }
 
 function afficherSection(nom) {
@@ -310,6 +311,65 @@ function afficherSection(nom) {
     document.getElementById('page-header-title').style.display = nom === 'programme' ? 'block' : 'none';
     document.getElementById('soiree-section').style.display = nom === 'soiree' ? 'block' : 'none';
     document.getElementById('auth-section').style.display = nom === 'auth' ? 'block' : 'none';
+    document.getElementById('billets-section').style.display = nom === 'billets' ? 'block' : 'none';
+}
+
+async function chargerBillets() {
+    const container = document.getElementById('billets-liste');
+    const btnImprimer = document.getElementById('btn-imprimer');
+    const token = getToken();
+    if (!token) {
+        afficherSection('auth');
+        return;
+    }
+
+    afficherSection('billets');
+    container.innerHTML = '<p>Chargement...</p>';
+    btnImprimer.style.display = 'none';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/billets`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+            deconnecter();
+            afficherSection('auth');
+            return;
+        }
+        if (!response.ok) {
+            container.innerHTML = '<p>Erreur lors du chargement des billets.</p>';
+            return;
+        }
+
+        const data = await response.json();
+        if (data.billets.length === 0) {
+            container.innerHTML = '<p>Vous n\'avez aucun billet pour le moment.</p>';
+            return;
+        }
+
+        container.innerHTML = data.billets.map(b => `
+            <article class="billet">
+                <div class="billet-main">
+                    <span class="label">Nancy Rock Vibration</span>
+                    <h3>${b.libelle}</h3>
+                    <p><span class="label">Acheteur</span>${b.acheteur}</p>
+                    <p><span class="label">Date et horaire</span>${b.date ? `${b.date} · ${b.heure}` : 'Pass multi-soirées'}</p>
+                    ${b.lieu ? `<p><span class="label">Lieu</span>${b.lieu}</p>` : ''}
+                </div>
+                <div class="billet-side">
+                    <span class="label">Tarif</span>
+                    <strong>${b.type_tarif}</strong>
+                    <span class="label" style="margin-top: 0.75rem;">Référence</span>
+                    <span class="billet-ref">${b.reference}</span>
+                </div>
+            </article>
+        `).join('');
+        btnImprimer.style.display = 'inline-block';
+    } catch (error) {
+        console.error("Erreur Fetch billets :", error);
+        container.innerHTML = '<p>Impossible de joindre le serveur.</p>';
+    }
 }
 
 function deconnecter() {
@@ -366,6 +426,17 @@ function initAuth() {
         e.preventDefault();
         afficherSection('auth');
     });
+
+    document.getElementById('lien-billets').addEventListener('click', (e) => {
+        e.preventDefault();
+        chargerBillets();
+    });
+
+    document.getElementById('btn-retour-billets').addEventListener('click', () => {
+        afficherSection('programme');
+    });
+
+    document.getElementById('btn-imprimer').addEventListener('click', () => window.print());
 
     document.getElementById('lien-deconnexion').addEventListener('click', (e) => {
         e.preventDefault();

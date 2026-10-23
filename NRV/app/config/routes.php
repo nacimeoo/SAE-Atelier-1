@@ -10,6 +10,7 @@ use nrv\adapters\actions\LoginAction;
 use nrv\adapters\actions\RegisterAction;
 use nrv\adapters\middlewares\UtilisateurMiddleware;
 use nrv\adapters\actions\GetPanierAction;
+use nrv\adapters\actions\GetBilletsAction;
 
 return function (\Slim\App $app): \Slim\App {
 
@@ -31,6 +32,8 @@ return function (\Slim\App $app): \Slim\App {
     });
 
     $app->get('/panier', GetPanierAction::class)->add(UtilisateurMiddleware::class)->setName('panier');
+
+    $app->get('/billets', GetBilletsAction::class)->add(UtilisateurMiddleware::class)->setName('billets');
 
     return $app;
 };

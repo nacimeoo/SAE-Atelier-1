@@ -26,6 +26,11 @@ use nrv\adapters\actions\LoginAction;
 use nrv\adapters\actions\RegisterAction;
 use nrv\adapters\middlewares\UtilisateurMiddleware;
 use nrv\adapters\actions\GetPanierAction;
+use nrv\adapters\actions\GetBilletsAction;
+use nrv\adapters\persistence\BilletRepository;
+use nrv\application\ports\api\ServiceBilletInterface;
+use nrv\application\ports\spi\BilletRepositoryInterface;
+use nrv\application\usecases\ServiceBillet;
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -97,6 +102,18 @@ return [
 
     GetPanierAction::class => function (ContainerInterface $c) {
         return new GetPanierAction($c->get(ServicePanierInterface::class));
+    },
+
+    BilletRepositoryInterface::class => function (ContainerInterface $c) {
+        return new BilletRepository($c->get('nrv.pdo'), $c->get(SoireeRepositoryInterface::class));
+    },
+
+    ServiceBilletInterface::class => function (ContainerInterface $c) {
+        return new ServiceBillet($c->get(BilletRepositoryInterface::class));
+    },
+
+    GetBilletsAction::class => function (ContainerInterface $c) {
+        return new GetBilletsAction($c->get(ServiceBilletInterface::class));
     },
 
 ];

@@ -39,7 +39,7 @@ class PanierDTO
                 $ligne->estPass() ? $ligne->getPass()->getLibelle() : $ligne->getSoiree()->getNom(),
                 $ligne->getSoiree()?->getDate()->format('Y-m-d'),
                 $ligne->getPrixUnitaire(),
-                $ligne->getSousTotal(),
+                $ligne->getPrixTotal(),
                 $ligne->getRemise()
         ), $panier->getLignesCommande());
 
