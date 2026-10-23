@@ -42,7 +42,7 @@ class SoireeTest extends TestCase
     public function testAjouterSpectacle(): void
     {
         $soiree = $this->creerSoiree(500, 0);
-        $soiree->ajouterSpectacle(new Spectacle('test', 'test', 'test', 'desc', 'test', 'test.jpg', null, new DateTimeImmutable('2026-11-06 22:15')));
+        $soiree->ajouterSpectacle(new Spectacle('test', 'test', 'test', 'desc', 'test', 'test.jpg', null, new DateTimeImmutable('2026-11-06 22:15'), 's1', new DateTimeImmutable('2026-11-06')));
         $this->assertCount(1, $soiree->getSpectacles());
     }
 }
