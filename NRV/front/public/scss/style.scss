@@ -17,22 +17,40 @@ body {
 
 .main-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 1rem 2rem;
+    gap: 1rem;
+    padding: 1rem;
     border-bottom: 1px solid $color-border;
+
+    @include respond-to(tablette) {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+    }
 
     .header-left, .header-right {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 2rem;
+        gap: 1rem;
+
+        @include respond-to(tablette) {
+            flex-direction: row;
+            gap: 2rem;
+        }
     }
 
     .nav-links {
         display: flex;
-        gap: 2.5rem; 
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        
+        @include respond-to(tablette) {
+            gap: 2.5rem; 
+        }
     }
-
     .logo {
         font-size: 1.5rem;
         font-weight: bold;
@@ -59,9 +77,16 @@ body {
 
 .page-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
     margin-bottom: 2rem;
+
+    @include respond-to(tablette) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
 
     h1 {
         font-size: 2.5rem;
@@ -101,10 +126,18 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr;
     gap: 2rem;
     margin-bottom: 3rem;
 
+    @include respond-to(tablette) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(desktop) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
     .card {
         cursor: pointer;
         display: flex;
@@ -166,9 +199,13 @@ body {
 
 .soiree-layout {
     display: grid;
-    grid-template-columns: 2fr 1fr; 
+    grid-template-columns: 1fr;
     gap: 3rem;
     align-items: start;
+
+    @include respond-to(desktop) {
+        grid-template-columns: 2fr 1fr;
+    }
 }
 
 .soiree-main {
@@ -192,9 +229,13 @@ body {
 
     .info-cards {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 1rem;
         margin-bottom: 3rem;
+
+        @include respond-to(tablette) {
+            grid-template-columns: repeat(4, 1fr);
+        }
 
         .info-card {
             border: 1px solid $color-border;
