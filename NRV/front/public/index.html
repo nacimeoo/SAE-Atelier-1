@@ -19,12 +19,12 @@
         </div>
         <div class="header-right">
             <a href="#" id="lien-connexion">Connexion</a>
-            <span id="zone-user" style="display: none;">
+            <span id="zone-user" hidden>
                 <span id="nom-utilisateur"></span>
                 <a href="#" id="lien-deconnexion">Déconnexion</a>
             </span>
-            <a href="#" id="lien-billets" style="display: none;">Mes billets</a>
-            <a href="#" id="lien-jauges" style="display: none;">Jauges</a>
+            <a href="#" id="lien-billets" hidden>Mes billets</a>
+            <a href="#" id="lien-jauges" hidden>Jauges</a>
             <a href="#" id="lien-panier"><strong>Panier <span id="compteur-panier">0</span></strong></a>        </div>
     </header>
 
@@ -61,21 +61,21 @@
             </div>
         </section>
 
-        <section id="soiree-section" style="display: none;">
+        <section id="soiree-section" hidden>
             <button id="btn-retour">← Retour au programme</button>
             <div id="soiree-detail"></div>
         </section>
 
-        <section id="billets-section" style="display: none;">
+        <section id="billets-section" hidden>
             <button id="btn-retour-billets">← Retour au programme</button>
             <h1>Mes billets</h1>
             <div class="billets-actions">
-                <button id="btn-imprimer" class="btn-primary" style="display: none;">Imprimer mes billets</button>
+                <button id="btn-imprimer" class="btn-primary" hidden>Imprimer mes billets</button>
             </div>
             <div id="billets-liste" class="billets-liste"></div>
         </section>
 
-        <section id="jauges-section" style="display: none;">
+        <section id="jauges-section" hidden>
             <button id="btn-retour-jauges">← Retour au programme</button>
             <h1>Jauges des soirées</h1>
             <div id="jauges-liste"></div>
@@ -97,7 +97,7 @@
             </div>
         </section>
 
-        <section id="auth-section" style="display: none;">
+        <section id="auth-section" hidden>
             <button id="btn-retour-auth">← Retour au programme</button>
 
             <div class="auth-card">
@@ -112,7 +112,7 @@
                     <a href="#" id="vers-inscription">Pas de compte ? S'inscrire</a>
                 </form>
 
-                <form id="register-form" style="display: none;">
+                <form id="register-form" hidden>
                     <h2>Inscription</h2>
                     <label for="register-nom">Nom</label>
                     <input type="text" id="register-nom" required>

@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-retour').addEventListener('click', () => {
-        document.getElementById('spectacles-section').style.display = 'block';
-        document.getElementById('soiree-section').style.display = 'none';
+        afficherSection('programme'); 
     });
 });
 
@@ -173,9 +172,7 @@ async function chargerSoiree(urlApi) {
         detailContainer.innerHTML = html;
         initBilleterie(soiree);
 
-        document.getElementById('spectacles-section').style.display = 'none';
-        document.getElementById('page-header-title').style.display = 'none';
-        document.getElementById('soiree-section').style.display = 'block';
+        afficherSection('soiree');
 
     } catch (error) {
         console.error("Erreur Fetch soirée :", error);
@@ -301,22 +298,22 @@ function enregistrerSession(token, user) {
 
 function afficherUtilisateur() {
     const prenom = localStorage.getItem('nrv_prenom');
-    document.getElementById('lien-connexion').style.display = prenom ? 'none' : 'inline';
-    document.getElementById('zone-user').style.display = prenom ? 'inline' : 'none';
+    
+    document.getElementById('lien-connexion').hidden = !!prenom; 
+    document.getElementById('zone-user').hidden = !prenom;
     document.getElementById('nom-utilisateur').textContent = prenom || '';
-    document.getElementById('lien-billets').style.display = prenom ? 'inline' : 'none';
-    document.getElementById('lien-jauges').style.display = localStorage.getItem('nrv_role') === 'GESTIONNAIRE' ? 'inline' : 'none';
+    document.getElementById('lien-billets').hidden = !prenom;
+    document.getElementById('lien-jauges').hidden = localStorage.getItem('nrv_role') !== 'GESTIONNAIRE';
 }
 
 function afficherSection(nom) {
-    document.getElementById('spectacles-section').style.display = nom === 'programme' ? 'block' : 'none';
-    document.getElementById('page-header-title').style.display = nom === 'programme' ? 'block' : 'none';
-    document.getElementById('soiree-section').style.display = nom === 'soiree' ? 'block' : 'none';
-    document.getElementById('auth-section').style.display = nom === 'auth' ? 'block' : 'none';
-    document.getElementById('billets-section').style.display = nom === 'billets' ? 'block' : 'none';
-    document.getElementById('jauges-section').style.display = nom === 'jauges' ? 'block' : 'none';
-    document.getElementById('panier-section').style.display = nom === 'panier' ? 'block' : 'none';
-
+    document.getElementById('spectacles-section').hidden = nom !== 'programme';
+    document.getElementById('page-header-title').hidden = nom !== 'programme';
+    document.getElementById('soiree-section').hidden = nom !== 'soiree';
+    document.getElementById('auth-section').hidden = nom !== 'auth';
+    document.getElementById('billets-section').hidden = nom !== 'billets';
+    document.getElementById('jauges-section').hidden = nom !== 'jauges';
+    document.getElementById('panier-section').hidden = nom !== 'panier';
 }
 
 async function chargerBillets() {
@@ -330,7 +327,7 @@ async function chargerBillets() {
 
     afficherSection('billets');
     container.innerHTML = '<p>Chargement...</p>';
-    btnImprimer.style.display = 'none';
+    btnImprimer.hidden = true;
 
     try {
         const response = await fetch(`${API_BASE_URL}/billets`, {
@@ -370,7 +367,7 @@ async function chargerBillets() {
                 </div>
             </article>
         `).join('');
-        btnImprimer.style.display = 'inline-block';
+        btnImprimer.hidden = false;
     } catch (error) {
         console.error("Erreur Fetch billets :", error);
         container.innerHTML = '<p>Impossible de joindre le serveur.</p>';
@@ -476,14 +473,14 @@ function initAuth() {
 
     document.getElementById('vers-inscription').addEventListener('click', (e) => {
         e.preventDefault();
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'flex';
+        loginForm.hidden = true;
+        registerForm.hidden = false;
     });
 
     document.getElementById('vers-connexion').addEventListener('click', (e) => {
         e.preventDefault();
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'flex';
+        registerForm.hidden = true;
+        loginForm.hidden = false;
     });
 
     loginForm.addEventListener('submit', async (e) => {
