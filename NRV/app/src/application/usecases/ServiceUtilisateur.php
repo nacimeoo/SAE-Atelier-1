@@ -9,6 +9,7 @@ use nrv\application\exceptions\EmailDejaUtiliseException;
 use nrv\application\exceptions\IdentifiantsInvalidesException;
 use nrv\application\ports\api\ServiceUtilisateurInterface;
 use nrv\application\ports\spi\UtilisateurRepositoryInterface;
+use nrv\application\validators\UtilisateurValidator;
 use nrv\domain\entities\Role;
 use nrv\domain\entities\Utilisateur;
 use Ramsey\Uuid\Uuid;
@@ -17,10 +18,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
     private const dureeToken = 3600;
 
-    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository, private string $jwtSecret) {}
+    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository, private string $jwtSecret, private UtilisateurValidator $utilisateurValidator = new UtilisateurValidator()) {}
 
     public function inscrire(string $nom, string $prenom, string $email, string $password): void
     {
+        $this->utilisateurValidator->validate($nom, $prenom, $email, $password);
+
         if ($this->utilisateurRepository->findByEmail($email) !== null) {
             throw new EmailDejaUtiliseException("Cet email est déjà utilisé.");
         }

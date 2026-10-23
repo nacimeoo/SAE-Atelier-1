@@ -25,7 +25,7 @@ class GetBilletsAction
             '_links'  => ['self' => ['href' => '/billets']],
         ];
 
-        $rs->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $rs->getBody()->write(json_encode($data));
         return $rs->withHeader('Content-Type', 'application/json')
                   ->withHeader('Access-Control-Allow-Origin', '*')
                   ->withStatus(200);

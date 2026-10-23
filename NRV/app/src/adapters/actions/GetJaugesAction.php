@@ -21,10 +21,10 @@ class GetJaugesAction
             'type'    => 'collection',
             'count'   => count($jauges),
             'soirees' => array_map(fn($j) => $j->toArray(), $jauges),
-            '_links'  => ['self' => ['href' => '/gestion/jauges']],
+            '_links'  => ['self' => ['href' => '/jauges']],
         ];
 
-        $rs->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $rs->getBody()->write(json_encode($data));
         return $rs->withHeader('Content-Type', 'application/json')
                   ->withHeader('Access-Control-Allow-Origin', '*')
                   ->withStatus(200);

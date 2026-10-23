@@ -40,7 +40,10 @@ class GetSpectacleAction
             $data[] = $dto->toArray();
         }
 
-        $response->getBody()->write(json_encode(['spectacles' => $data], JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode([
+            'spectacles' => $data,
+            '_links' => ['self' => ['href' => '/spectacles'], 'styles' => ['href' => '/styles']],
+        ]));
         
         return $response->withHeader('Content-Type', 'application/json')
         ->withHeader('Access-Control-Allow-Origin', '*')

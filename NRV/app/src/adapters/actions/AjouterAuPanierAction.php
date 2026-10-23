@@ -7,9 +7,8 @@ use nrv\application\exceptions\SoireeNotFoundException;
 use nrv\application\ports\api\ServicePanierInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
-use Respect\Validation\ValidatorBuilder as v;
+use nrv\application\exceptions\ValidationException;
 use nrv\application\exceptions\InsufficientSeatsException;
 
 
@@ -24,28 +23,21 @@ class AjouterAuPanierAction
     {
         $body = $rq->getParsedBody();
         $UtilisateurId = $rq->getAttribute('utilisateurId');
-        $soireeId = $body['soiree_id'] ?? null;
-        $typeTarif = $body['type_tarif'] ?? null;
+        $soireeId = isset($body['soiree_id']) ? (string)$body['soiree_id'] : null;
+        $typeTarif = isset($body['type_tarif']) ? (string)$body['type_tarif'] : null;
         $quantite = isset($body['quantite']) ? (int)$body['quantite'] : null;
-
-        if (!v::uuid()->isValid($soireeId)) {
-            throw new HttpBadRequestException($rq, "id de soirée invalide : $soireeId");
-        }
-
-        if (!v::in(['NORMAL', 'REDUIT'], true)->isValid($typeTarif)) {
-            throw new HttpBadRequestException($rq, "type de tarif invalide : $typeTarif");
-        }
-
-        if ($quantite <= 0) {
-            throw new HttpBadRequestException($rq, "quantité invalide : $quantite");
-        }
 
         try {
             $panierDTO = $this->servicePanier->ajouterBilletAuPanier($UtilisateurId, $soireeId, $typeTarif, $quantite);
+        } catch (ValidationException $e) {
+            $rs->getBody()->write(json_encode(['type' => 'error', 'message' => implode(' ', $e->getErrors()), 'errors' => $e->getErrors()]));
+            return $rs->withHeader('Content-Type', 'application/json')
+                      ->withHeader('Access-Control-Allow-Origin', '*')
+                      ->withStatus(400);
         } catch (SoireeNotFoundException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         } catch (InsufficientSeatsException $e) {
-            $rs->getBody()->write(json_encode(['type' => 'error', 'message' => $e->getMessage()], JSON_UNESCAPED_UNICODE));
+            $rs->getBody()->write(json_encode(['type' => 'error', 'message' => $e->getMessage()]));
             return $rs->withHeader('Content-Type', 'application/json')
                       ->withHeader('Access-Control-Allow-Origin', '*')
                       ->withStatus(422);
@@ -60,6 +52,11 @@ class AjouterAuPanierAction
                     'type_tarif'  => $ligne->typeTarif,
                     'quantite'    => $ligne->quantite,
                 ], $panierDTO->lignes),
+            ],
+            '_links' => [
+                'self'    => ['href' => '/panier'],
+                'valider' => ['href' => '/commandes', 'method' => 'POST'],
+                'soiree'  => ['href' => "/soirees/$soireeId"],
             ],
         ];
 

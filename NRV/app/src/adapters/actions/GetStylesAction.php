@@ -19,7 +19,10 @@ class GetStylesAction
     public function __invoke(Request $request, Response $response): Response
     {
         $styles = $this->service->listerStyles();
-        $response->getBody()->write(json_encode(['styles' => $styles]));
+        $response->getBody()->write(json_encode([
+            'styles' => $styles,
+            '_links' => ['self' => ['href' => '/styles'], 'spectacles' => ['href' => '/spectacles']],
+        ]));
         return $response->withHeader('Content-Type', 'application/json')
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withStatus(200);

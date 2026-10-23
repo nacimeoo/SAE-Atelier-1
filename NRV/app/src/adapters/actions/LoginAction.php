@@ -34,7 +34,8 @@ class LoginAction
             'type'  => 'resource',
             'token' => $auth->token,
             'user'  => ['nom' => $auth->nom, 'prenom' => $auth->prenom, 'role' => $auth->role],
-        ], JSON_UNESCAPED_UNICODE));
+            '_links' => ['panier' => ['href' => '/panier'], 'billets' => ['href' => '/billets']],
+        ]));
 
         return $rs->withHeader('Content-Type', 'application/json')
                   ->withHeader('Access-Control-Allow-Origin', '*')

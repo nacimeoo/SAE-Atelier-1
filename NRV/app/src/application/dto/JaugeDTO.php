@@ -28,6 +28,7 @@ class JaugeDTO
                 ? round($this->placesVendues / $this->capacite * 100, 1)
                 : 0,
             'recette'        => $this->recette,
+            '_links'         => ['soiree' => ['href' => '/soirees/' . $this->id]],
         ];
     }
 }

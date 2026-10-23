@@ -14,22 +14,22 @@ use nrv\application\dto\LignePanierDTO;
 use nrv\application\exceptions\SoireeNotFoundException;
 use nrv\application\exceptions\InsufficientSeatsException;
 use nrv\application\exceptions\PanierNotFoundException;
+use nrv\application\validators\PanierValidator;
 
 
 
 class ServicePanier implements ServicePanierInterface
 {
     public function __construct(
-        private PanierRepositoryInterface $panierRepository, private SoireeRepositoryInterface $soireeRepository
+        private PanierRepositoryInterface $panierRepository, private SoireeRepositoryInterface $soireeRepository,
+        private PanierValidator $panierValidator = new PanierValidator()
     ) {}
 
-    public function ajouterBilletAuPanier(string $utilisateurId, string $soireeId, string $typeTarif, int $quantite): PanierDTO
+    public function ajouterBilletAuPanier(string $utilisateurId, ?string $soireeId, ?string $typeTarif, ?int $quantite): PanierDTO
     {
+        $this->panierValidator->validate($soireeId, $typeTarif, $quantite);
 
         $tarif = TypeTarif::tryFrom($typeTarif);
-        if ($tarif === null) {
-            throw new \InvalidArgumentException("Type de tarif invalide : $typeTarif");
-        }
 
         try {
             $soiree = $this->soireeRepository->findById($soireeId);
