@@ -171,19 +171,41 @@ body {
 
 .main-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  padding: 1rem 2rem;
+  gap: 1rem;
+  padding: 1rem;
   border-bottom: 1px solid #e0e0e0;
+}
+@media screen and (min-width: 48em) {
+  .main-header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  }
 }
 .main-header .header-left, .main-header .header-right {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
+}
+@media screen and (min-width: 48em) {
+  .main-header .header-left, .main-header .header-right {
+    flex-direction: row;
+    gap: 2rem;
+  }
 }
 .main-header .nav-links {
   display: flex;
-  gap: 2.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+@media screen and (min-width: 48em) {
+  .main-header .nav-links {
+    gap: 2.5rem;
+  }
 }
 .main-header .logo {
   font-size: 1.5rem;
@@ -207,9 +229,17 @@ body {
 
 .page-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
   margin-bottom: 2rem;
+}
+@media screen and (min-width: 48em) {
+  .page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
 }
 .page-header h1 {
   font-size: 2.5rem;
@@ -243,9 +273,19 @@ body {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 3rem;
+}
+@media screen and (min-width: 48em) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 64em) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 .grid-container .card {
   cursor: pointer;
@@ -303,9 +343,14 @@ body {
 
 .soiree-layout {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 3rem;
   align-items: start;
+}
+@media screen and (min-width: 64em) {
+  .soiree-layout {
+    grid-template-columns: 2fr 1fr;
+  }
 }
 
 .soiree-main .main-image-container {
@@ -325,9 +370,14 @@ body {
 }
 .soiree-main .info-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-bottom: 3rem;
+}
+@media screen and (min-width: 48em) {
+  .soiree-main .info-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 .soiree-main .info-cards .info-card {
   border: 1px solid #e0e0e0;

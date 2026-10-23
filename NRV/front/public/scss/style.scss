@@ -1,4 +1,5 @@
 @use 'variables' as *;
+@use 'mixins' as *;
 @use 'panier';
 @use 'paiement';
 
@@ -50,7 +51,7 @@ body {
         @include respond-to(tablette) {
             gap: 2.5rem; 
         }
-    }
+    } 
     .logo {
         font-size: 1.5rem;
         font-weight: bold;
