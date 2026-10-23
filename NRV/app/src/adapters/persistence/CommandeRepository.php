@@ -22,9 +22,11 @@ class CommandeRepository implements CommandeRepositoryInterface
             
             foreach ($lignesPanier as $ligne) {
                 for ($i = 0; $i < $ligne->getQuantite(); $i++) {
+                    $ref = 'NRV-' . strtoupper(bin2hex(random_bytes(5)));
+                    
                     $stmtBillet->execute([
                         'id' => Uuid::uuid4()->toString(),
-                        'ref' => strtoupper(substr(uniqid('NRV-'), 0, 10)),
+                        'ref' => $ref,
                         'token' => bin2hex(random_bytes(16)),
                         'tarif' => $ligne->getTypeTarif()->value,
                         'prix' => $ligne->getPrixUnitaire(),

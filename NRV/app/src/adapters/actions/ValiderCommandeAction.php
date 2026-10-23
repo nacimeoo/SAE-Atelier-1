@@ -28,10 +28,11 @@ class ValiderCommandeAction
             'commande_id' => $commandeId,
             '_links' => [
                 'self' => ['href' => '/commandes', 'method' => 'POST'],
+                'paiement' => ['href' => "/commandes/$commandeId/paiement", 'method' => 'POST'],
                 'billets' => ['href' => '/billets'],
                 'panier' => ['href' => '/panier']
             ]
-        ]));
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         
         return $rs->withHeader('Content-Type', 'application/json')
                   ->withHeader('Access-Control-Allow-Origin', '*')
