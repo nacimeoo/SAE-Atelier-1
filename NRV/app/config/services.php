@@ -34,6 +34,12 @@ use nrv\application\usecases\ServiceBillet;
 use nrv\adapters\actions\GetJaugesAction;
 use nrv\adapters\middlewares\RoleMiddleware;
 
+use nrv\application\ports\spi\CommandeRepositoryInterface;
+use nrv\adapters\persistence\CommandeRepository;
+use nrv\application\ports\api\ServiceCommandeInterface;
+use nrv\application\usecases\ServiceCommande;
+use nrv\adapters\actions\ValiderCommandeAction;
+
 
 return [
     'nrv.pdo' => function (ContainerInterface $c) {
@@ -125,6 +131,18 @@ return [
 
     GetJaugesAction::class => function (ContainerInterface $c) {
         return new GetJaugesAction($c->get(ServiceBilletInterface::class));
+    },
+
+    CommandeRepositoryInterface::class => function (\Psr\Container\ContainerInterface $c) {
+    return new CommandeRepository($c->get('nrv.pdo'));
+    },
+
+    ServiceCommandeInterface::class => function (\Psr\Container\ContainerInterface $c) {
+        return new ServiceCommande($c->get(\nrv\application\ports\spi\PanierRepositoryInterface::class), $c->get(CommandeRepositoryInterface::class));
+    },
+
+    ValiderCommandeAction::class => function (\Psr\Container\ContainerInterface $c) {
+        return new ValiderCommandeAction($c->get(ServiceCommandeInterface::class));
     },
 
 ];

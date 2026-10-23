@@ -13,6 +13,7 @@ use nrv\adapters\actions\GetPanierAction;
 use nrv\adapters\actions\GetBilletsAction;
 use nrv\adapters\actions\GetJaugesAction;
 use nrv\adapters\middlewares\RoleMiddleware;
+use nrv\adapters\actions\ValiderCommandeAction;
 
 return function (\Slim\App $app): \Slim\App {
 
@@ -41,6 +42,10 @@ return function (\Slim\App $app): \Slim\App {
         ->add(RoleMiddleware::class)
         ->add(UtilisateurMiddleware::class)
         ->setName('jauges');
+
+    $app->post('/commandes', ValiderCommandeAction::class)
+    ->add(UtilisateurMiddleware::class)
+    ->setName('valider_commande');
 
     return $app;
 };
