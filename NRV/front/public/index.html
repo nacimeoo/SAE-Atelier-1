@@ -25,8 +25,7 @@
             </span>
             <a href="#" id="lien-billets" style="display: none;">Mes billets</a>
             <a href="#" id="lien-jauges" style="display: none;">Jauges</a>
-            <a href="#"><strong>Panier <span id="compteur-panier">0</span></strong></a>
-        </div>
+            <a href="#" id="lien-panier"><strong>Panier <span id="compteur-panier">0</span></strong></a>        </div>
     </header>
 
     <main class="container">
@@ -80,6 +79,22 @@
             <button id="btn-retour-jauges">← Retour au programme</button>
             <h1>Jauges des soirées</h1>
             <div id="jauges-liste"></div>
+        </section>
+
+        <section id="panier-section" class="panier" hidden>
+            <button id="btn-retour-panier" class="panier__retour">← Retour au programme</button>
+            <h1 class="panier__titre">Mon panier</h1>
+            <div class="panier__contenu">
+                <ul id="panier-lignes" class="panier__lignes"></ul>
+                <aside class="panier__resume" aria-labelledby="panier-resume-titre">
+                    <h2 id="panier-resume-titre" class="panier__resume-titre">Récapitulatif</h2>
+                    <p class="panier__resume-ligne"><span>Billets</span><span id="panier-nb">0</span></p>
+                    <p class="panier__resume-ligne"><span>Remise pass</span><span id="panier-remise">0,00 €</span></p>
+                    <p class="panier__resume-ligne panier__resume-ligne--total"><span>Total</span><span id="panier-total">0,00 €</span></p>
+                    <button id="btn-valider-panier" class="panier__valider" hidden>Valider la commande</button>
+                    <p id="panier-message" class="panier__message" role="status"></p>
+                </aside>
+            </div>
         </section>
 
         <section id="auth-section" style="display: none;">

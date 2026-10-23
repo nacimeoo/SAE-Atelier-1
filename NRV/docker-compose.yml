@@ -4,6 +4,7 @@ networks:
 
 services:
   api.nrv:
+    restart: unless-stopped
     build:
       context: build
       dockerfile: 8.5-cli.Dockerfile
@@ -20,6 +21,7 @@ services:
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
 
   front.nrv:
+    restart: unless-stopped
     image: 'nginx:alpine'
     ports:
       - '7081:80'
@@ -31,6 +33,7 @@ services:
       - api.nrv
 
   nrv.db:
+    restart: unless-stopped
     image: 'postgres:18.6'
     container_name: nrv_db
     env_file: ./nrv.env
@@ -44,6 +47,7 @@ services:
       - pgdata:/var/lib/postgresql
 
   adminer:
+    restart: unless-stopped
     image: adminer:5.4.2
     depends_on:
       - nrv.db

@@ -315,6 +315,7 @@ function afficherSection(nom) {
     document.getElementById('auth-section').style.display = nom === 'auth' ? 'block' : 'none';
     document.getElementById('billets-section').style.display = nom === 'billets' ? 'block' : 'none';
     document.getElementById('jauges-section').style.display = nom === 'jauges' ? 'block' : 'none';
+    document.getElementById('panier-section').style.display = nom === 'panier' ? 'block' : 'none';
 
 }
 
@@ -457,6 +458,18 @@ function initAuth() {
         afficherSection('programme');
     });
 
+    
+    document.getElementById('lien-panier').addEventListener('click', (e) => {
+        e.preventDefault();
+        chargerPanier();
+    });
+
+    document.getElementById('btn-retour-panier').addEventListener('click', () => {
+        afficherSection('programme');
+    });
+
+    document.getElementById('btn-valider-panier').addEventListener('click', validerPanier);
+
     document.getElementById('btn-retour').addEventListener('click', () => {
         afficherSection('programme');
     });
@@ -573,3 +586,105 @@ async function chargerJauges() {
     }
 }
 
+function formaterPrix(montant) {
+    return Number(montant).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+}
+
+function formaterDate(date) {
+    return new Date(date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' });
+}
+
+async function chargerPanier() {
+    const token = getToken();
+    if (!token) {
+        afficherSection('auth');
+        return;
+    }
+
+    afficherSection('panier');
+    const liste = document.getElementById('panier-lignes');
+    const btnValider = document.getElementById('btn-valider-panier');
+    const message = document.getElementById('panier-message');
+    liste.innerHTML = '<li class="panier__vide">Chargement...</li>';
+    message.textContent = '';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/panier`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 401) {
+            deconnecter();
+            afficherSection('auth');
+            return;
+        }
+        if (!response.ok) {
+            liste.innerHTML = '<li class="panier__vide">Erreur lors du chargement du panier.</li>';
+            return;
+        }
+
+        const data = await response.json();
+        const panier = data.panier;
+
+        if (panier.lignes.length === 0) {
+            liste.innerHTML = '<li class="panier__vide">Votre panier est vide.</li>';
+        } else {
+            liste.innerHTML = panier.lignes.map(ligne => `
+                <li class="panier__ligne">
+                    <div>
+                        <h3 class="panier__libelle">${ligne.libelle}</h3>
+                        <p class="panier__detail">${ligne.date ? formaterDate(ligne.date) : 'Pass 3 soirées'} · tarif ${ligne.type_tarif.toLowerCase()}</p>
+                        <p class="panier__detail">${ligne.quantite} × ${formaterPrix(ligne.prix_unitaire)}</p>
+                    </div>
+                    <p class="panier__sous-total">${formaterPrix(ligne.sous_total)}</p>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('panier-nb').textContent = panier.nb_billets;
+        document.getElementById('panier-remise').textContent = '− ' + formaterPrix(panier.total_remise);
+        document.getElementById('panier-total').textContent = formaterPrix(panier.montant_total);
+
+        btnValider.hidden = !data._links.valider;
+        btnValider.dataset.href = data._links.valider ? data._links.valider.href : '';
+
+        localStorage.setItem('panierTotal', panier.nb_billets);
+        afficherCompteur();
+    } catch (error) {
+        console.error("Erreur Fetch panier :", error);
+        liste.innerHTML = '<li class="panier__vide">Impossible de joindre le serveur.</li>';
+    }
+}
+
+
+async function validerPanier() {
+    const btnValider = document.getElementById('btn-valider-panier');
+    const message = document.getElementById('panier-message');
+    const token = getToken();
+
+    btnValider.disabled = true;
+    message.textContent = '';
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${btnValider.dataset.href}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.status === 201) {
+            message.textContent = 'Commande créée. Vous pouvez passer au paiement.';
+        } else if (response.status === 401) {
+            deconnecter();
+            afficherSection('auth');
+        } else if (response.status === 404) {
+            message.textContent = "La validation des commandes n'est pas encore disponible.";
+        } else {
+            message.textContent = 'Erreur lors de la validation du panier.';
+        }
+    } catch (error) {
+        console.error("Erreur validation panier :", error);
+        message.textContent = 'Impossible de joindre le serveur.';
+    } finally {
+        btnValider.disabled = false;
+    }
+}
